@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import QueryProvider from "@/lib/query-provider";
+import TopNav from "@/components/TopNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +29,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="bg-black">
+          <div className="min-h-screen mx-auto max-w-7xl pt-24 pb-10">
+            <TopNav />
+            <QueryProvider>{children}</QueryProvider>
+          </div>
+        </div>
       </body>
     </html>
   );
