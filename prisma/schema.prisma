@@ -44,6 +44,7 @@ model Project {
   is_featured Boolean?
   thumbnail   String?
   images      String?
+  category    String?
  
 }
 
@@ -54,4 +55,5 @@ model Skills {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   name       String?
   category   String?
+  image_url  String?
 }

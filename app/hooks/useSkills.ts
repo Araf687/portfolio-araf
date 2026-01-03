@@ -2,9 +2,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetcher, postJSON, putJSON, deleteJSON } from "@/lib/fetchers";
 
+export interface Skill {
+  id: string;         // BigInt is serialized as string for client-side
+  created_at: string; // DateTime as ISO string
+  name?: string;
+  category?: string;
+  image_url?: string;
+}
+
+
 // Fetch all skills
 export function useFetchSkills() {
-  return useQuery({
+  return useQuery<Skill[]>({
     queryKey: ["skills"],
     queryFn: () => fetcher("/api/skill"),
   });

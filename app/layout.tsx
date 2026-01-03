@@ -28,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ background: "black" }}
       >
         <div className="bg-black">
           <div className="min-h-screen mx-auto max-w-7xl pt-24 pb-10">

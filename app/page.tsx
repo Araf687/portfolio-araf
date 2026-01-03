@@ -1,16 +1,13 @@
 "use client";
 
-import AnimatedColorText from "@/components/AnimatedColorText";
 import HeroSection from "@/components/HeroSection";
 import Skills from "@/components/Skills";
-import TopNav from "@/components/TopNav";
-import { useFetchProjects } from "./hooks/useProjects";
+
+import ProjectSection from "@/components/Projects";
 
 
 export default function Home() {
-  const { data: projects, isLoading } = useFetchProjects();
-  console.log({ projects, isLoading });
-  //  const projects = await prisma.project.findMany();
+
 
   return (
     <div>
@@ -26,6 +23,7 @@ export default function Home() {
         </a>
       </div>
       <Skills/>
+      <ProjectSection/>
     </div>
   );
 }
