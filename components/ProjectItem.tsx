@@ -21,11 +21,11 @@ export const ProjectItem = ({
       <img
         src={thumbnail}
         alt={title}
-        className="w-full h-48 object-cover"
+        className="w-full lg:h-80 h-26 object-cover"
       />
       <div className="p-4">
         <h3 className="text-white font-semibold text-lg">{title}</h3>
-        <p className="text-gray-400 text-sm mt-1">{description}</p>
+        {/* <p className="text-gray-400 text-sm mt-1">{description}</p> */}
         <div className="flex gap-4 mt-3">
           {live_url && (
             <a

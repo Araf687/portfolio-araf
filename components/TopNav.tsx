@@ -4,9 +4,14 @@ import { Briefcase, House, Mail, User } from "lucide-react";
 import Link from "next/link";
 import Tooltip from "./Tooltip";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation"; // ✅
 
 const TopNav = () => {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname(); // current route
+
+  // hide TopNav on login page
+  if (pathname === "/login"||pathname.startsWith("/admin")) return null; // ✅ hide
 
   useEffect(() => {
     const onScroll = () => {

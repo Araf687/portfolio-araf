@@ -7,6 +7,9 @@ import { useFetchProjects } from "@/app/hooks/useProjects";
 import { ProjectItem } from "./ProjectItem";
 import { WaterDrop } from "./WaterDrop";
 import { motion, useInView } from "framer-motion";
+import { Project } from "@/types/data";
+import { dummyProjects } from "@/app/page";
+import BentoProjectsGrid from "./bentoui";
 
 const ProjectSection = () => {
   const [activeTab, setActiveTab] = useState<"web" | "mobile">("web");
@@ -35,7 +38,7 @@ const ProjectSection = () => {
   }, []);
 
   // Filter projects
-  const filteredProjects = projects?.filter((p: any) =>
+  const filteredProjects = projects?.filter((p: Project) =>
     activeTab === "web" ? p.category === "web" : p.category === "app"
   );
 
@@ -46,12 +49,12 @@ const ProjectSection = () => {
   return (
     <div className="mt-20 lg:mt-32 px-4 sm:px-6 lg:px-0" ref={containerRef}>
       {/* Title */}
-      <div className="flex justify-center lg:justify-end mb-8 lg:mb-10">
+      <div className="flex justify-center lg:justify-end ">
         <TitleText direction="column">FEATURED _PROJECTS_</TitleText>
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12 relative flex-wrap">
+      {/* <div className="flex justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12 relative flex-wrap">
         {tabs.map(({ key, icon }) => {
           const isActive = activeTab === key;
 
@@ -75,9 +78,9 @@ const ProjectSection = () => {
             </button>
           );
         })}
-      </div>
+      </div> */}
 
-      {/* Projects Grid */}
+      {/* Projects Grid
       {isInView && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
           {isLoading && <p className="text-gray-400">Loading projects...</p>}
@@ -85,7 +88,7 @@ const ProjectSection = () => {
             <p className="text-gray-400">No projects found.</p>
           )}
           {!isLoading &&
-            filteredProjects?.map((project: any, index: number) => {
+            filteredProjects?.map((project: Project, index: number) => {
               // Animation based on screen size
               const animationProps = isLg
                 ? index % 2 === 0
@@ -101,17 +104,19 @@ const ProjectSection = () => {
                   transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
                 >
                   <ProjectItem
-                    title={project.title}
-                    description={project.description}
-                    thumbnail={project.thumbnail}
-                    live_url={project.live_url}
-                    github_url={project.github_url}
+                    title={project.title||""}
+                    description={project.description||""}
+                    thumbnail={project.thumbnail||""}
+                    live_url={project.live_url||""}
+                    github_url={project.github_url||""}
                   />
                 </motion.div>
               );
             })}
         </div>
-      )}
+      )} */}
+
+      <BentoProjectsGrid projects={dummyProjects} />
     </div>
   );
 };

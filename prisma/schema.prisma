@@ -1,30 +1,29 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
 }
+
 datasource db {
   provider = "postgresql"
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model User {
+  id       BigInt  @id @default(autoincrement())
+  email    String  @unique
+  password String
+  role     String  @default("admin") // admin | user
+}
+
+/// Contact messages
 model Contact_msg {
   id         BigInt   @id @default(autoincrement())
   name       String   @default("not null")
   created_at DateTime @default(now()) @db.Timestamptz(6)
   email      String   @default("not null")
   message    String?  @default("null")
-
-  
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+/// Page views
 model Page_views {
   id         BigInt   @id @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(6)
@@ -32,8 +31,7 @@ model Page_views {
   path       String?
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+/// Projects
 model Project {
   id          BigInt   @id @default(autoincrement())
   created_at  DateTime @default(now()) @db.Timestamptz(6)
@@ -43,17 +41,37 @@ model Project {
   live_url    String?
   is_featured Boolean?
   thumbnail   String?
-  images      String?
   category    String?
- 
+
+  skills      ProjectSkill[]
+  images      Images[]   // ✅ Added relation to Images
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+/// Project images
+model Images {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  url        String?
+  projectId  BigInt
+  project    Project @relation(fields: [projectId], references: [id])
+}
+
+/// Skills
 model Skills {
   id         BigInt   @id @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(6)
   name       String?
   category   String?
   image_url  String?
+
+  projects   ProjectSkill[]
+}
+
+/// Join table for Project & Skills (many-to-many)
+model ProjectSkill {
+  projectId BigInt
+  skillId   BigInt
+  project   Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
+  skill     Skills  @relation(fields: [skillId], references: [id],onDelete: Cascade)
+  @@id([projectId, skillId])
 }
