@@ -55,7 +55,7 @@ const ProjectSection = () => {
       </div>
 
       {/* Tabs - Uncommented to allow filtering */}
-      <div className="flex justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12 relative flex-wrap">
+      {/* <div className="flex justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12 relative flex-wrap">
         {tabs.map(({ key, icon }) => {
           const isActive = activeTab === key;
 
@@ -79,7 +79,7 @@ const ProjectSection = () => {
             </button>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Projects Display Logic */}
       {isLoading ? (

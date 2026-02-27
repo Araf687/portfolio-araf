@@ -57,7 +57,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             {/* <p className="text-sm text-white/70 uppercase tracking-widest mb-6">{project.category}</p> */}
                 <div>
               {/* <h3 className="text-xl font-semibold text-white mb-4">Skills</h3> */}
-              <div className="flex flex-wrap gap-3 mt-1">
+              <div className="flex flex-wrap gap-3 mt-2">
                 {project.skills.map((skillItem) => (
                   <span
                     key={skillItem.skill.id}
@@ -78,7 +78,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 underline text-white font-semibold hover:bg-white/10 transition"
+                  className="flex items-center gap-2 hover:underline text-white font-semibold  transition"
                 >
                   <Github size={18} /> GitHub
                 </a>
@@ -88,7 +88,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white font-semibold hover:bg-white/10 transition"
+                  className="flex items-center gap-2 hover:underline text-white font-semibold transition"
                 >
                   <ExternalLink size={18} /> Live Demo
                 </a>
@@ -104,7 +104,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               alt={project.title}
               width={600}
               height={400}
-              className="rounded-2xl border border-white/10 my-4"
+              className="rounded-2xl border border-white/10 mb-4 mt-6"
             />
             {project.images.length > 0 && (
               <div className="grid grid-cols-2 gap-4">
