@@ -164,14 +164,61 @@ export default function BentoProjectsGrid({
                 )}
               </div>
 
-              <motion.button
+              {/* <motion.button
                 whileHover={{ scale: 1.02 }}
                 className="rounded-2xl bg-gradient-to-tr from-cyan-400 via-velvet-800 to-gray-700 gap-4 cursor-pointer flex items-center justify-center p-4 min-h-0 shadow-lg text-white"
                 onClick={onAllProjectsClick}
               >
                 <span className="font-semibold text-2xl">All Projects</span>
                 <ChevronsRight className="w-14 h-14" />
-              </motion.button>
+              </motion.button> */}
+
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="group relative rounded-2xl  bg-red-200 overflow-hidden cursor-pointer flex items-center justify-center p-4 min-h-0 border border-white/10 bg-white/5 backdrop-blur-md"
+                onClick={onAllProjectsClick}
+              >
+                {/* --- Animated Stroke Design --- */}
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  {/* Background Strokes */}
+                  <motion.rect
+                    x="0" y="0" width="100" height="100"
+                    fill="none"
+                    stroke="url(#gradient-stroke)"
+                    strokeWidth="0.5"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.4 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                  <defs>
+                    <linearGradient id="gradient-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#22d3ee" /> {/* Cyan */}
+                      <stop offset="100%" stopColor="#818cf8" /> {/* Indigo */}
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* HUD style corners */}
+                <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-cyan-400/50 rounded-tl-md group-hover:border-cyan-400 transition-colors" />
+                <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-indigo-400/50 rounded-br-md group-hover:border-indigo-400 transition-colors" />
+
+                {/* Content */}
+                <div className="relative z-10 flex flex-col items-center gap-2">
+                  {/* <div className="relative">
+                    <div className="absolute -inset-4 bg-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ChevronsRight className="w-12 h-12 text-white/80 group-hover:text-cyan-400 group-hover:translate-x-2 transition-all duration-300" />
+                  </div> */}
+                  <span className="font-bold text-xl lg:text-2xl text-white/90 tracking-[0.2em] group-hover:text-white transition-colors">
+                    EXPLORE <br />
+                    {/* <span className="text-xs text-cyan-400/70 group-hover:text-cyan-400 tracking-widest font-mono">ALL_REPOSITORIES</span> */}
+                  </span>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
