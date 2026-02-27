@@ -3,7 +3,6 @@ import { prisma } from "@/lib/db";
 import crypto from "crypto";
 import { uploadFileToSupabase } from "@/utils/fileupload";
 import { supabase } from "@/lib/superbas-client";
-import { Project } from "@/types/data";
 
 /* ===========================
    Serialization
@@ -47,7 +46,7 @@ function serializeProject(project: any) {
               category: ps.skill.category,
               image_url: ps.skill.image_url,
             },
-          })
+          }),
         )
       : [],
   };
@@ -61,6 +60,7 @@ export async function GET() {
     const projects = await prisma.project.findMany({
       include: {
         skills: { include: { skill: true } },
+        images: true,
       },
     });
 
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
       thumbnailUrl = await uploadFileToSupabase(
         thumbnailFile,
         folderName,
-        "project-images"
+        "project-images",
       );
     }
 
@@ -131,6 +131,7 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("uploadFileToSupabase", imageFiles);
     // 3️⃣ Upload gallery images
     if (imageFiles.length > 0) {
       const imageRecords: { projectId: bigint; url: string }[] = [];
@@ -138,10 +139,12 @@ export async function POST(request: Request) {
         const url = await uploadFileToSupabase(
           imgFile,
           folderName,
-          "project-images"
+          "project-images",
         );
+        console.log("url", url);
         imageRecords.push({ projectId: project.id, url });
       }
+      console.log(imageRecords, "imageRecords");
       await prisma.images.createMany({ data: imageRecords });
     }
 
@@ -169,35 +172,77 @@ export async function POST(request: Request) {
 =========================== */
 export async function PUT(request: Request) {
   try {
-    const { id, skills: newSkills, ...rest } = await request.json();
+    const formData = await request.formData();
+    const id = BigInt(formData.get("id") as string);
+    const title = formData.get("title") as string;
+    
+    // 1. Handle Thumbnail Update
+    const newThumbnailFile = formData.get("thumbnail") as File | null;
+    let thumbnailUrl: string | undefined;
 
-    const updatedProject = await prisma.project.update({
-      where: { id: BigInt(id) },
+    if (newThumbnailFile) {
+      const currentProject = await prisma.project.findUnique({ where: { id } });
+      if (currentProject?.thumbnail) {
+        const oldThumbPath = extractPathFromUrl(currentProject.thumbnail);
+        if (oldThumbPath) await supabase.storage.from("project-images").remove([oldThumbPath]);
+      }
+      const folder = `${title.split(" ")[0].toLowerCase()}-${id}`;
+      thumbnailUrl = await uploadFileToSupabase(newThumbnailFile, folder, "project-images");
+    }
+
+    // 2. Handle Image Deletions
+    const deletedImagesRaw = formData.get("deletedImages") as string | null;
+    if (deletedImagesRaw) {
+      const deletedImages = JSON.parse(deletedImagesRaw);
+      const paths = deletedImages.map((img: any) => extractPathFromUrl(img.url)).filter(Boolean);
+      
+      if (paths.length > 0) {
+        await supabase.storage.from("project-images").remove(paths);
+      }
+      
+      await prisma.images.deleteMany({
+        where: { id: { in: deletedImages.map((img: any) => BigInt(img.id)) } }
+      });
+    }
+
+    // 3. Handle New Image Uploads
+    const newFiles = formData.getAll("images") as File[];
+    if (newFiles.length > 0) {
+      const folder = `${title.split(" ")[0].toLowerCase()}-${id}`;
+      const imageRecords = [];
+      for (const file of newFiles) {
+        const url = await uploadFileToSupabase(file, folder, "project-images");
+        imageRecords.push({ projectId: id, url });
+      }
+      await prisma.images.createMany({ data: imageRecords });
+    }
+
+    // 4. Update Main Project Data & Skills
+    const skills = formData.getAll("skills");
+    const updated = await prisma.project.update({
+      where: { id },
       data: {
-        ...rest,
-        // Update skills properly
-        skills: newSkills
-          ? {
-              deleteMany: {}, // remove old skills
-              create: newSkills.map((skillId: string) => ({
-                skill: { connect: { id: BigInt(skillId) } },
-              })),
-            }
-          : undefined,
+        title,
+        description: formData.get("description") as string,
+        github_url: formData.get("github_url") as string,
+        live_url: formData.get("live_url") as string,
+        is_featured: formData.get("is_featured") === "true",
+        category: formData.get("category") as string,
+        ...(thumbnailUrl && { thumbnail: thumbnailUrl }),
+        skills: {
+          deleteMany: {}, // Wipe existing relationships
+          create: skills.map((skillId) => ({
+            skill: { connect: { id: BigInt(skillId as string) } },
+          })),
+        },
       },
-      include: { skills: { include: { skill: true } } },
+      include: { skills: { include: { skill: true } }, images: true },
     });
 
-    return new Response(JSON.stringify(serializeProject(updatedProject)), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(serializeProject(updated)), { status: 200 });
   } catch (err) {
-    console.error("PUT /api/project error:", err);
-    return new Response(JSON.stringify({ error: "Failed to update project" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error(err);
+    return new Response(JSON.stringify({ error: "Update failed" }), { status: 500 });
   }
 }
 
@@ -328,7 +373,7 @@ export async function DELETE(request: Request) {
       }),
       {
         status: 200,
-      }
+      },
     );
   } catch (err) {
     console.error("DELETE /api/project error:", err);

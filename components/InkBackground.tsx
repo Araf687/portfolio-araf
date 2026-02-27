@@ -49,7 +49,7 @@ export default function InkBackground() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
       {/* Mouse-following ink blob */}
       <motion.div
         style={{ x, y }}

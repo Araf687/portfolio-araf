@@ -17,12 +17,12 @@ export async function uploadFileToSupabase(
   const { data, error } = await supabase.storage
     .from(bucket)
     .upload(filePath, file);
-  console.log(data);
+  // console.log(data);
   if (error) throw error;
 
   const { data: urlData } = supabase.storage
     .from(bucket)
     .getPublicUrl(filePath);
-  console.log("Url:",urlData);
+  // console.log("Url:",urlData);
   return urlData.publicUrl;
 }

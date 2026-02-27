@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import ContactForm from "./ContactForm";
-import TitleText from "../Title";
-import GlowingImage from "../GlowingImage";
+import TitleText from "../../Title";
+import GlowingImage from "../../GlowingImage";
 
 const ContactSection = () => {
   return (
-    <div className="grid pt-10 grid-cols-1 items-end gap-12 md:grid-cols-2">
+    <div className="grid pt-20 lg:pt-50 grid-cols-1 items-end gap-12 md:grid-cols-2">
       <div>
         <TitleText direction="column">Contact Me</TitleText>
         {/* Left: Contact Form */}

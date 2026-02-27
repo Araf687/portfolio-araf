@@ -174,6 +174,40 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
         </div>
       </div>
 
+      {/* Featured Checkbox */}
+      <div className="md:col-span-1 flex items-center h-[42px]"> {/* Match height of other inputs */}
+        <label className="flex items-center space-x-3 cursor-pointer group">
+          <div className="relative">
+            <input
+              type="checkbox"
+              {...register("is_featured")}
+              className="peer sr-only"
+            />
+            {/* Custom Styled Checkbox */}
+            <div className="w-6 h-6 bg-gray-800 border-2 border-gray-700 rounded transition-all 
+          peer-checked:bg-indigo-600 peer-checked:border-indigo-600 
+          group-hover:border-indigo-400">
+            </div>
+            {/* Checkmark Icon */}
+            <svg
+              className="absolute top-1 left-1 w-4 h-4 text-white hidden peer-checked:block pointer-events-none"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+            Featured
+          </span>
+        </label>
+      </div>
+
       {/* URLs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

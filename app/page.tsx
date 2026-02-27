@@ -1,14 +1,14 @@
 "use client";
 
 import HeroSection from "@/components/HeroSection";
-import Skills from "@/components/Skills";
-
-import ProjectSection from "@/components/Projects";
+import Skills from "@/components/web/skill/Skills";
+import ProjectSection from "@/components/web/project-section/Projects";
 import InkBackground from "@/components/InkBackground";
-import ContactSection from "@/components/contact/ContactSection";
-import ScrollFadeIn from "@/components/ScrollFadeIn";
-import BentoProjectsGrid from "@/components/bentoui";
+import ContactSection from "@/components/web/contact/ContactSection";
+import ScrollAnimatedSection from "@/components/ScrollFadeIn";
+import TopNav from "@/components/TopNav";
 
+// ✅ Dummy project data
 export const dummyProjects = [
   {
     id: 1,
@@ -54,29 +54,35 @@ export const dummyProjects = [
   },
 ];
 
-
 export default function Home() {
   return (
-    
-    <div className="mx-auto max-w-7xl pt-24 pb-10">
-      <InkBackground />
-      <HeroSection />
-      {/* Download CV Button */}
-      <div className="mt-20 sm:mt-[80px] text-center">
-        <a
-          href="/my-cv.pdf"
-          download
-          className=" rounded-lg px-6 py-2 font-semibold bg-white text-black transition-colors duration-300"
-        >
-          <span>Download My CV</span>
-        </a>
-      </div>
-      <Skills />
-      <ProjectSection />
-      
+    <div className="mx-auto max-w-7xl pt-24 p-10 relative">
+      {/* TopNav */}
+      <TopNav />
 
+      <ScrollAnimatedSection>
+        <InkBackground />
 
-      <ContactSection/>
+        {/* Hero Section */}
+        <div id="hero">
+          <HeroSection />
+        </div>
+
+        {/* Skills Section */}
+        <div id="skills">
+          <Skills />
+        </div>
+
+        {/* Projects Section */}
+        <div id="projects">
+          <ProjectSection />
+        </div>
+
+        {/* Contact Section */}
+        <div id="contact">
+          <ContactSection />
+        </div>
+      </ScrollAnimatedSection>
     </div>
   );
 }

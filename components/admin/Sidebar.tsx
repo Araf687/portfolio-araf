@@ -20,14 +20,14 @@ const Sidebar: React.FC = () => {
     { name: "Dashboard", icon: <Home size={18} />, path: "/admin" },
     { name: "Projects", icon: <Layers size={18} />, path: "/admin/projects" },
     { name: "Skills", icon: <User size={18} />, path: "/admin/skills" },
-    { name: "CV / Docs", icon: <FileText size={18} />, path: "/admin/docs" },
+    { name: "CV / Docs", icon: <FileText size={18} />, path: "/admin/cv" },
     { name: "Blog", icon: <Edit3 size={18} />, path: "/admin/blog" },
     { name: "Page Views", icon: <BarChart2 size={18} />, path: "/admin/page-views" },
     { name: "Contact Messages", icon: <Mail size={18} />, path: "/admin/messages" },
   ];
 
   return (
-    <aside className="bg-gray-900 text-gray-100 w-64 min-h-screen p-4 border-r border-gray-700 flex flex-col">
+    <aside className="bg-gray-900 text-gray-100 w-64 h-[100vh] p-4 border-r border-gray-700 flex flex-col">
       <h1 className="text-2xl font-bold mb-10">Portfolio Admin</h1>
 
       <nav className="flex-1">

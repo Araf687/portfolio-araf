@@ -1,33 +1,34 @@
 "use client";
 
-import { Briefcase, House, Mail, User } from "lucide-react";
-import Link from "next/link";
+import { Briefcase, House, Mail, Server } from "lucide-react"; // Server = Technical Skills icon
 import Tooltip from "./Tooltip";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation"; // ✅
+import { usePathname } from "next/navigation";
 
 const TopNav = () => {
   const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname(); // current route
+  const pathname = usePathname();
 
-  // hide TopNav on login page
-  if (pathname === "/login"||pathname.startsWith("/admin")) return null; // ✅ hide
+  // hide TopNav on login page or admin routes
+  if (pathname === "/login" || pathname.startsWith("/admin")) return null;
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Scroll function
+  const handleScroll = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   const navOptions = [
-    { name: "Home", href: "/", icon: <House size={20} /> },
-    { name: "Projects", href: "/projects", icon: <Briefcase size={20} /> },
-    { name: "About", href: "/about", icon: <User size={20} /> },
-    { name: "Contact", href: "/contact", icon: <Mail size={20} /> },
-    { name: "Blog", href: "/blog", icon: <Mail size={20} /> },
+    { name: "Home", id: "hero", icon: <House size={20} /> },
+    { name: "Technical Skills", id: "skills", icon: <Server size={20} /> },
+    { name: "Projects", id: "projects", icon: <Briefcase size={20} /> },
+    { name: "Contact", id: "contact", icon: <Mail size={20} /> },
   ];
 
   return (
@@ -45,12 +46,12 @@ const TopNav = () => {
       >
         {navOptions.map((option) => (
           <Tooltip content={option.name} key={option.name}>
-            <Link
-              href={option.href}
+            <button
+              onClick={() => handleScroll(option.id)}
               className="flex items-center gap-2 p-3 text-gray-300 hover:text-white rounded"
             >
               {option.icon}
-            </Link>
+            </button>
           </Tooltip>
         ))}
       </div>

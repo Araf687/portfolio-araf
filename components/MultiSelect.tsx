@@ -10,19 +10,38 @@ type Option = {
 type MultiSelectProps = {
   options: Option[];
   placeholder?: string;
+  defaultValue?: string[];   // ✅ NEW
   onChange?: (values: string[]) => void;
 };
 
 export default function MultiSelect({
   options,
   placeholder = "Select options",
+  defaultValue = [],
   onChange,
 }: MultiSelectProps) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Option[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // close dropdown when clicking outside
+  /* -------------------------------------------------- */
+  /* Set Default Values */
+/* -------------------------------------------------- */
+
+  useEffect(() => {
+    if (!defaultValue.length) return;
+
+    const defaults = options.filter((opt) =>
+      defaultValue.includes(opt.value)
+    );
+
+    setSelected(defaults);
+  }, [defaultValue, options]);
+
+  /* -------------------------------------------------- */
+  /* Close Outside */
+/* -------------------------------------------------- */
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -32,9 +51,14 @@ export default function MultiSelect({
         setOpen(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  /* -------------------------------------------------- */
+  /* Toggle */
+/* -------------------------------------------------- */
 
   const toggleSelect = (option: Option) => {
     const exists = selected.find((s) => s.value === option.value);
@@ -56,12 +80,16 @@ export default function MultiSelect({
     onChange?.(newSelected.map((s) => s.value));
   };
 
+  /* -------------------------------------------------- */
+  /* UI */
+/* -------------------------------------------------- */
+
   return (
     <div className="relative w-full" ref={wrapperRef}>
-      {/* Input Box */}
+      {/* Input */}
       <div
         onClick={() => setOpen((prev) => !prev)}
-        className="min-h-[40px] w-full cursor-pointer rounded-md border border-gray-700 bg-gray-800 px-2 py-1 flex flex-wrap gap-1 items-center focus-within:ring-2 focus-within:ring-blue-500"
+        className="min-h-[40px] w-full cursor-pointer rounded-md border border-gray-700 bg-gray-800 px-2 py-1 flex flex-wrap gap-1 items-center"
       >
         {selected.length === 0 && (
           <span className="text-gray-400 text-sm">{placeholder}</span>
@@ -78,7 +106,7 @@ export default function MultiSelect({
                 e.stopPropagation();
                 removeItem(item.value);
               }}
-              className="text-red-600 ml-3 hover:text-red-500"
+              className="text-red-600 ml-2"
             >
               ✕
             </button>
@@ -90,7 +118,9 @@ export default function MultiSelect({
       {open && (
         <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-700 bg-gray-800 shadow">
           {options.map((option) => {
-            const isSelected = selected.some((s) => s.value === option.value);
+            const isSelected = selected.some(
+              (s) => s.value === option.value
+            );
 
             return (
               <li

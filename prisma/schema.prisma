@@ -12,6 +12,9 @@ model User {
   email    String  @unique
   password String
   role     String  @default("admin") // admin | user
+   cv_url    String?      // 🔹 Supabase CV file URL
+  cv_name   String?      // 🔹 original file name
+  cv_updated_at DateTime?
 }
 
 /// Contact messages

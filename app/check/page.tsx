@@ -1,12 +1,10 @@
 "use client";
 
-
-
 import { motion, useAnimation } from "framer-motion";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-export default function ScrollAnimatedSection({ children }: { children: React.ReactNode }) {
+export default function ScrollAnimatedSection() {
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.2 }); // trigger when 20% visible
 
@@ -27,9 +25,10 @@ export default function ScrollAnimatedSection({ children }: { children: React.Re
       initial="hidden"
       animate={controls}
       variants={variants}
+      style={{ margin: "230vh 0", padding: "20px", background: "#f0f0f0" }}
     >
-     {children}
+      <h2>Smooth Scroll Animation Section</h2>
+      <p>This section fades in and slides up when you scroll to it.</p>
     </motion.div>
   );
 }
-

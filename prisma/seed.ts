@@ -48,13 +48,12 @@ async function seedSkills() {
 
 async function seedProjects() {
   console.log("🔹 Seeding projects...");
-  for (const project of projectsData) {
-    await prisma.project.create({
+  // for (const project of projectsData) {
+  //   await prisma.project.create({
     
-  
-      data: project,
-    });
-  }
+  //     data: project,
+  //   });
+  // }
 }
 
 async function seedContactMessage() {

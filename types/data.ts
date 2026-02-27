@@ -35,3 +35,11 @@ export interface Skill {
   category?: string;
   image_url?: string;
 }
+
+
+// types/cv.ts
+export interface CV {
+  cv_url?: string;
+  cv_name?: string;
+  cv_updated_at?: string;
+}
