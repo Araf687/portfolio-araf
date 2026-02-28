@@ -7,6 +7,7 @@ import { supabase } from "@/lib/superbas-client";
 /* ===========================
    Serialization
 =========================== */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function serializeProject(project: any) {
   return {
     id: project.id.toString(),
@@ -194,14 +195,14 @@ export async function PUT(request: Request) {
     const deletedImagesRaw = formData.get("deletedImages") as string | null;
     if (deletedImagesRaw) {
       const deletedImages = JSON.parse(deletedImagesRaw);
-      const paths = deletedImages.map((img: any) => extractPathFromUrl(img.url)).filter(Boolean);
+      const paths = deletedImages.map((img: {url: string}) => extractPathFromUrl(img.url)).filter(Boolean);
       
       if (paths.length > 0) {
         await supabase.storage.from("project-images").remove(paths);
       }
       
       await prisma.images.deleteMany({
-        where: { id: { in: deletedImages.map((img: any) => BigInt(img.id)) } }
+        where: { id: { in: deletedImages.map((img: {id: string}) => BigInt(img.id)) } }
       });
     }
 

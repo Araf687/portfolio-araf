@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import "dotenv/config"; // eta .env load kore
+// import "dotenv/config"; // eta .env load kore
 // import { PrismaClient } from "../app/generated/prisma/client";
 // import { PrismaPg } from "@prisma/adapter-pg";
 // const adapter = new PrismaPg({
