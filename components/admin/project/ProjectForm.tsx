@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { useToast } from "@/context/ToastProvider";
 import MultiSelect from "@/components/MultiSelect";
 import { useFetchSkills } from "@/app/hooks/useSkills";
+import TiptapEditor from "@/components/TextEditor";
 
 export type ProjectFormData = {
   title: string;
@@ -138,10 +139,15 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
 
       {/* Description */}
       <div>
-        <label className="block mb-1 font-medium">Description</label>
+        {/* <label className="block mb-1 font-medium">Description</label>
         <textarea
           {...register("description")}
           className="w-full rounded px-3 py-2 bg-gray-800 border border-gray-700 focus:outline-none focus:ring-0"
+        /> */}
+        <TiptapEditor
+          form={{ setValue, watch }}
+          name="description"
+          label="Description"
         />
       </div>
 

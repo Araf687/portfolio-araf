@@ -6,6 +6,7 @@ import { X, Loader2, Link as LinkIcon, Github } from "lucide-react";
 import { useToast } from "@/context/ToastProvider";
 import MultiSelect from "@/components/MultiSelect";
 import { useFetchSkills } from "@/app/hooks/useSkills";
+import TiptapEditor from "@/components/TextEditor";
 
 export type ProjectFormData = {
   title: string;
@@ -149,13 +150,11 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
 
       {/* Description */}
       <div>
-        <label className="block mb-1 text-sm font-medium text-gray-400">Description</label>
-        <textarea 
-          {...register("description")} 
-          rows={3} 
-          className="w-full rounded-lg px-4 py-2.5 bg-gray-900 border border-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition" 
-          placeholder="Tell a bit about the project..."
-        />
+         <TiptapEditor
+    form={{ setValue, watch }}
+    name="description"
+    label="Project Description"
+  />
       </div>
 
       {/* Row: Skills, Category, Featured */}
