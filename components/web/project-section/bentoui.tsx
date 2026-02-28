@@ -246,7 +246,7 @@ function Placeholder() {
     //
     <div className="rounded-2xl border border-gray-700 bg-gray-900 flex items-center justify-center text-sm text-gray-500 min-h-0 h-full w-full italic">
       //
-      Coming Soon //
+      Projects //
     </div>
     //
   ); //
