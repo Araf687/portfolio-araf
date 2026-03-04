@@ -9,12 +9,15 @@ const CV = () => {
   const { mutate: updateCV, isPending } = useUpdateCV();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Show loading state while fetching CV
   if (isLoading) return <p>Loading...</p>;
 
+  // Trigger hidden file input
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
+  // Handle file selection
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) updateCV(selectedFile);
@@ -32,9 +35,7 @@ const CV = () => {
           <button
             onClick={handleUploadClick}
             disabled={isPending}
-            className="px-3 py-2 bg-green-600 text-white rounded
-                       hover:bg-green-700 disabled:opacity-50
-                       flex items-center gap-2 text-sm"
+            className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 text-sm"
           >
             <Pencil size={14} />
             {isPending ? "Uploading..." : "Change CV"}
@@ -57,6 +58,7 @@ const CV = () => {
               <a
                 href={cv.cv_url}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-blue-600 underline"
               >
                 Open / Download
@@ -68,21 +70,15 @@ const CV = () => {
         /* ================= NO CV ================= */
         <div
           onClick={handleUploadClick}
-          className="cursor-pointer bg-gray-800 hover:bg-gray-700 transition-colors
-                     rounded-lg p-10 flex flex-col items-center justify-center
-                     text-gray-200 space-y-3"
+          className="cursor-pointer bg-gray-800 hover:bg-gray-700 transition-colors rounded-lg p-10 flex flex-col items-center justify-center text-gray-200 space-y-3"
         >
           <CloudUpload size={42} className="text-gray-300" />
-          <p className="text-sm">
-            {isPending ? "Uploading..." : "Click to upload your CV"}
-          </p>
-          <p className="text-xs text-gray-400">
-            PDF recommended
-          </p>
+          <p className="text-sm">{isPending ? "Uploading..." : "Click to upload your CV"}</p>
+          <p className="text-xs text-gray-400">PDF recommended</p>
         </div>
       )}
 
-      {/* 🔒 Hidden input */}
+      {/* 🔒 Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
