@@ -57,8 +57,8 @@ export default function BentoProjectsGrid({
 
   return (
     <>
-      {/* ================= MOBILE VIEW ================= */}
-      <div className="lg:hidden lg:mt-16 mt-10  lg:p-0 p-2 space-y-6">
+      {/* ================= MOBILE VIEW (UNCHANGED) ================= */}
+      <div className="lg:hidden lg:mt-16 mt-10 lg:p-0 p-2 space-y-6">
 
         {/* Row 1 — 1 Item */}
         {items[0] && (
@@ -138,7 +138,7 @@ export default function BentoProjectsGrid({
         </motion.div>
       </div>
 
-      {/* ================= DESKTOP BENTO ================= */}
+      {/* ================= DESKTOP BENTO (REDUCED HEIGHT) ================= */}
       <div
         className="
           hidden lg:grid
@@ -146,13 +146,14 @@ export default function BentoProjectsGrid({
           mt-20
           rounded-2xl
           w-full
-          h-[800px]
-          overflow-hidden
-          grid-cols-[30%_70%]
+          h-[650px]          /* Height reduced from 800px */
+          grid-cols-[30%_65%]
+          gap-6             /* Using gap for spacing between cards */
+          p-1               /* Slight padding so borders aren't clipped */
         "
       >
         {/* LEFT COLUMN */}
-        <div className="grid grid-rows-[20%_50%_30%] pr-4 h-full min-h-0 gap-6">
+        <div className="grid grid-rows-[18%_50%_26%] h-full gap-6">
           {items[5] ? (
             <ProjectCard
               project={items[5]}
@@ -191,7 +192,7 @@ export default function BentoProjectsGrid({
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="grid grid-rows-[40%_60%] h-full min-h-0 gap-6">
+        <div className="grid grid-rows-[38%_58%] h-full gap-6">
           {items[0] ? (
             <ProjectCard
               project={items[0]}
@@ -204,8 +205,8 @@ export default function BentoProjectsGrid({
             <Placeholder />
           )}
 
-          <div className="grid grid-cols-[65%_35%] h-full min-h-0 gap-6">
-            <div className="h-full min-h-0">
+          <div className="grid grid-cols-[65%_35%] h-full gap-6">
+            <div className="h-full">
               {items[4] ? (
                 <ProjectCard
                   project={items[4]}
@@ -219,7 +220,7 @@ export default function BentoProjectsGrid({
               )}
             </div>
 
-            <div className="grid grid-rows-[70%_30%] h-full min-h-0 gap-6">
+            <div className="grid grid-rows-[65%_30%] h-full gap-6">
               {items[2] ? (
                 <ProjectCard
                   project={items[2]}
@@ -237,7 +238,7 @@ export default function BentoProjectsGrid({
                 className="group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-4 border border-white/10 bg-white/5 backdrop-blur-md"
                 onClick={onAllProjectsClick}
               >
-                <span className="font-bold text-xl tracking-widest text-white">
+                <span className="font-bold text-xl tracking-widest text-white uppercase">
                   EXPLORE
                 </span>
               </motion.div>
@@ -261,7 +262,7 @@ export default function BentoProjectsGrid({
 
 function Placeholder() {
   return (
-    <div className="rounded-2xl border border-gray-700 bg-gray-900 flex items-center justify-center text-sm text-gray-500 h-full w-full italic">
+    <div className="rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center text-sm text-gray-500 h-full w-full italic">
       Projects
     </div>
   );

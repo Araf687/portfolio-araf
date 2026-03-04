@@ -357,8 +357,8 @@ const HeroSection = () => {
         <div className=" flex flex-nowrap sm:flex-wrap justify-center sm:justify-start gap-3 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
           {[
             { end: 3, suffix: "+", resttxt: "years of experience" },
-            { end: 50, suffix: "+", resttxt: "completed projects" },
-            { end: 20, suffix: "+", resttxt: "happy clients worldwide" },
+            { end: 25, suffix: "+", resttxt: "completed projects" },
+            { end: 15, suffix: "+", resttxt: "happy clients worldwide" },
           ].map((item, index) => (
             <div
               key={index}
