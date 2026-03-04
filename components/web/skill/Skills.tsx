@@ -12,7 +12,7 @@ const Skills = () => {
     return <p className="mt-10 text-center text-gray-400">Loading skills...</p>;
 
   return (
-    <div className="mt-20 lg:mt-0 lg:mt-32 px-4 sm:px-6 lg:px-0">
+    <div className="mt-24 lg:mt-0 lg:mt-32 px-4 sm:px-6 lg:px-0">
       <TitleText direction="column">TECHNICAL SKILLS</TitleText>
 
       <motion.div

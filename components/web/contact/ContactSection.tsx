@@ -8,7 +8,7 @@ import GlowingImage from "../../GlowingImage";
 
 const ContactSection = () => {
   return (
-    <div className="grid pt-20 lg:pt-50 grid-cols-1 items-end gap-12 md:grid-cols-2">
+    <div className="grid pt-20 mb-4 lg:pt-50 lg:px-0 px-3 grid-cols-1 items-end gap-12 md:grid-cols-2">
       <div>
         <TitleText direction="column">Contact Me</TitleText>
         {/* Left: Contact Form */}

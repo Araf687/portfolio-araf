@@ -56,7 +56,7 @@ export const dummyProjects = [
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-7xl pt-24 p-10 relative">
+    <div className="mx-auto max-w-7xl pt-24 p-2 lg:p-10 relative">
       {/* TopNav */}
       <TopNav />
 

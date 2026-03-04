@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function GlowingImage() {
   return (
-    <div className="relative w-full max-w-xl mx-auto">
+    <div className="relative w-full max-w-xl mx-auto lg:flex hidden">
       {/* 🔵 CONTINUOUS GLOW */}
       <motion.div
         className="

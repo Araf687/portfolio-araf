@@ -1,253 +1,268 @@
-// bento-grid.tsx
-"use client"; //
+"use client";
 
-import React, { useState } from "react"; //
-import { motion, Variants, AnimatePresence } from "framer-motion"; //
-import { ChevronsRight } from "lucide-react"; //
-import { ProjectCard } from "./project-card"; //
-import ProjectModal from "./project-modal"; //
+import React, { useState } from "react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+import { ProjectCard } from "./project-card";
+import ProjectModal from "./project-modal";
 
 export type Project = {
-  //
-  id: string; //
-  title: string; //
-  description: string; //
-  category: "web" | "app"; //
-  github_url: string; //
-  live_url: string; //
-  is_featured: boolean; //
-  thumbnail: string; //
+  id: string;
+  title: string;
+  description: string;
+  category: "web" | "app";
+  github_url: string;
+  live_url: string;
+  is_featured: boolean;
+  thumbnail: string;
   skills: {
-    //
     skill: {
-      //
-      id: string; //
-      name: string; //
-      image_url: string; //
-    }; //
-  }[]; //
+      id: string;
+      name: string;
+      image_url: string;
+    };
+  }[];
   images: {
-    //
-    id: string; //
-    url: string; //
-  }[]; //
-  created_at: string; //
-  updated_at: string; //
-}; //
+    id: string;
+    url: string;
+  }[];
+  created_at: string;
+  updated_at: string;
+};
 
 interface BentoProjectsGridProps {
-  //
-  projects: Project[]; //
-  onAllProjectsClick?: () => void; //
-} //
+  projects: Project[];
+  onAllProjectsClick?: () => void;
+}
 
 export default function BentoProjectsGrid({
-  //
-  projects, //
-  onAllProjectsClick, //
+  projects,
+  onAllProjectsClick,
 }: BentoProjectsGridProps) {
-  //
-  // Slice to 5 to match your rendering logic, though type says up to 7
-  const items = projects.slice(0, 5); //
-
-  // Add state to manage selected project
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null); //
+  const items = projects.slice(0, 6);
+  const [selectedProject, setSelectedProject] =
+    useState<Project | null>(null);
 
   const variants: Variants = {
-    //
-    fromLeft: { opacity: 0, x: -100 }, //
-    fromRight: { opacity: 0, x: 100 }, //
-    fromTop: { opacity: 0, y: -100 }, //
-    fromBottom: { opacity: 0, y: 100 }, //
-    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6 } }, //
-  }; //
+    fromLeft: { opacity: 0, x: -60 },
+    fromRight: { opacity: 0, x: 60 },
+    fromTop: { opacity: 0, y: -60 },
+    fromBottom: { opacity: 0, y: 60 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
 
   return (
-    //
     <>
-      //
-      <div className="relative grid grid-cols-[30%_70%] mt-20 rounded-2xl w-full h-[800px] overflow-hidden">
+      {/* ================= MOBILE VIEW ================= */}
+      <div className="lg:hidden lg:mt-16 mt-10  lg:p-0 p-2 space-y-6">
+
+        {/* Row 1 — 1 Item */}
+        {items[0] && (
+          <ProjectCard
+            project={items[0]}
+            variants={variants}
+            initial="fromTop"
+            whileInView="visible"
+            onClick={() => setSelectedProject(items[0])}
+          />
+        )}
+
+        {/* Row 2 — 2 Items */}
+        <div className="grid grid-cols-2 gap-4">
+          {items[1] && (
+            <ProjectCard
+              project={items[1]}
+              variants={variants}
+              initial="fromLeft"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[1])}
+            />
+          )}
+          {items[2] && (
+            <ProjectCard
+              project={items[2]}
+              variants={variants}
+              initial="fromRight"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[2])}
+            />
+          )}
+        </div>
+
+        {/* Row 3 — 2 Items */}
+        <div className="grid grid-cols-2 gap-4">
+          {items[3] && (
+            <ProjectCard
+              project={items[3]}
+              variants={variants}
+              initial="fromLeft"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[3])}
+            />
+          )}
+          {items[4] && (
+            <ProjectCard
+              project={items[4]}
+              variants={variants}
+              initial="fromRight"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[4])}
+            />
+          )}
+        </div>
+
+        {/* Row 4 — 1 Item */}
+        {items[5] && (
+          <ProjectCard
+            project={items[5]}
+            variants={variants}
+            initial="fromBottom"
+            whileInView="visible"
+            onClick={() => setSelectedProject(items[5])}
+          />
+        )}
+
+        {/* Explore Button */}
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          className="group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-8 border border-white/10 bg-white/5 backdrop-blur-md"
+          onClick={onAllProjectsClick}
+        >
+          <span className="font-bold text-lg tracking-widest text-white">
+            EXPLORE ALL
+          </span>
+        </motion.div>
+      </div>
+
+      {/* ================= DESKTOP BENTO ================= */}
+      <div
+        className="
+          hidden lg:grid
+          relative
+          mt-20
+          rounded-2xl
+          w-full
+          h-[800px]
+          overflow-hidden
+          grid-cols-[30%_70%]
+        "
+      >
         {/* LEFT COLUMN */}
-        <div className="grid grid-rows-[20%_50%_30%] pr-4 h-full min-h-0">
-          <div className="min-h-0">
-            {items[5] ? ( // Render the fifth project if it exists
-              <ProjectCard
-                project={items[5]}
-                variants={variants}
-                initial="fromRight"
-                whileInView="visible"
-                onClick={() => setSelectedProject(items[5])} // Set selected project
-              />
-            ) : (
-              <Placeholder />
-            )}
-          </div>
+        <div className="grid grid-rows-[20%_50%_30%] pr-4 h-full min-h-0 gap-6">
+          {items[5] ? (
+            <ProjectCard
+              project={items[5]}
+              variants={variants}
+              initial="fromRight"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[5])}
+            />
+          ) : (
+            <Placeholder />
+          )}
 
-          <div className="min-h-0">
-            {items[3] ? ( // Render the third project if it exists
-              <ProjectCard
-                project={items[3]}
-                className="py-4"
-                variants={variants}
-                initial="fromLeft"
-                whileInView="visible"
-                onClick={() => setSelectedProject(items[3])} // Set selected project
-              />
-            ) : (
-              <Placeholder />
-            )}
-          </div>
+          {items[3] ? (
+            <ProjectCard
+              project={items[3]}
+              variants={variants}
+              initial="fromLeft"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[3])}
+            />
+          ) : (
+            <Placeholder />
+          )}
 
-          <div className="min-h-0">
-            {items[1] ? ( // Render the first project if it exists
-              <ProjectCard
-                project={items[1]}
-                variants={variants}
-                initial="fromLeft"
-                whileInView="visible"
-                onClick={() => setSelectedProject(items[1])} // Set selected project
-              />
-            ) : (
-              <Placeholder />
-            )}
-          </div>
+          {items[1] ? (
+            <ProjectCard
+              project={items[1]}
+              variants={variants}
+              initial="fromLeft"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[1])}
+            />
+          ) : (
+            <Placeholder />
+          )}
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="grid grid-rows-[40%_60%] h-full min-h-0">
-          <div className="min-h-0">
-            {items[0] ? ( // Render the first project if it exists
-              <ProjectCard
-                project={items[0]}
-                className="pb-4"
-                variants={variants}
-                initial="fromTop"
-                whileInView="visible"
-                onClick={() => setSelectedProject(items[0])} // Set selected project
-              />
-            ) : (
-              <Placeholder />
-            )}
-          </div>
+        <div className="grid grid-rows-[40%_60%] h-full min-h-0 gap-6">
+          {items[0] ? (
+            <ProjectCard
+              project={items[0]}
+              variants={variants}
+              initial="fromTop"
+              whileInView="visible"
+              onClick={() => setSelectedProject(items[0])}
+            />
+          ) : (
+            <Placeholder />
+          )}
 
-          <div className="grid grid-cols-[65%_35%] h-full min-h-0">
-            <div className="grid grid-rows-[100%] pr-5 h-full min-h-0">
-              <div className="min-h-0">
-                {items[4] ? ( // Render the fourth project if it exists
-                  <ProjectCard
-                    project={items[4]}
-                    className="pb-4"
-                    variants={variants}
-                    initial="fromBottom"
-                    whileInView="visible"
-                    onClick={() => setSelectedProject(items[4])} // Set selected project
-                  />
-                ) : (
-                  <Placeholder />
-                )}
-              </div>
+          <div className="grid grid-cols-[65%_35%] h-full min-h-0 gap-6">
+            <div className="h-full min-h-0">
+              {items[4] ? (
+                <ProjectCard
+                  project={items[4]}
+                  variants={variants}
+                  initial="fromBottom"
+                  whileInView="visible"
+                  onClick={() => setSelectedProject(items[4])}
+                />
+              ) : (
+                <Placeholder />
+              )}
             </div>
 
-            <div className="grid grid-rows-[70%_30%] h-full min-h-0 gap-4">
-              <div className="min-h-0">
-                {items[2] ? ( // Render the second project if it exists
-                  <ProjectCard
-                    project={items[2]}
-                    className="pb-4"
-                    variants={variants}
-                    initial="fromRight"
-                    whileInView="visible"
-                    onClick={() => setSelectedProject(items[2])} // Set selected project
-                  />
-                ) : (
-                  <Placeholder />
-                )}
-              </div>
+            <div className="grid grid-rows-[70%_30%] h-full min-h-0 gap-6">
+              {items[2] ? (
+                <ProjectCard
+                  project={items[2]}
+                  variants={variants}
+                  initial="fromRight"
+                  whileInView="visible"
+                  onClick={() => setSelectedProject(items[2])}
+                />
+              ) : (
+                <Placeholder />
+              )}
 
-              {/* <motion.button
-                whileHover={{ scale: 1.02 }}
-                className="rounded-2xl bg-gradient-to-tr from-cyan-400 via-velvet-800 to-gray-700 gap-4 cursor-pointer flex items-center justify-center p-4 min-h-0 shadow-lg text-white"
-                onClick={onAllProjectsClick}
-              >
-                <span className="font-semibold text-2xl">All Projects</span>
-                <ChevronsRight className="w-14 h-14" />
-              </motion.button> */}
-
-              
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="group relative rounded-2xl  bg-red-200 overflow-hidden cursor-pointer flex items-center justify-center p-4 min-h-0 border border-white/10 bg-white/5 backdrop-blur-md"
+                className="group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-4 border border-white/10 bg-white/5 backdrop-blur-md"
                 onClick={onAllProjectsClick}
               >
-                {/* --- Animated Stroke Design --- */}
-                <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                >
-                  {/* Background Strokes */}
-                  <motion.rect
-                    x="0" y="0" width="100" height="100"
-                    fill="none"
-                    stroke="url(#gradient-stroke)"
-                    strokeWidth="0.5"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.4 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  />
-                  <defs>
-                    <linearGradient id="gradient-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#22d3ee" /> {/* Cyan */}
-                      <stop offset="100%" stopColor="#818cf8" /> {/* Indigo */}
-                    </linearGradient>
-                  </defs>
-                </svg>
-
-                {/* HUD style corners */}
-                <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-cyan-400/50 rounded-tl-md group-hover:border-cyan-400 transition-colors" />
-                <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-indigo-400/50 rounded-br-md group-hover:border-indigo-400 transition-colors" />
-
-                {/* Content */}
-                <div className="relative z-10 flex flex-col items-center gap-2">
-                  {/* <div className="relative">
-                    <div className="absolute -inset-4 bg-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <ChevronsRight className="w-12 h-12 text-white/80 group-hover:text-cyan-400 group-hover:translate-x-2 transition-all duration-300" />
-                  </div> */}
-                  <span className="font-bold text-xl lg:text-2xl text-white/90 tracking-[0.2em] group-hover:text-white transition-colors">
-                    EXPLORE <br />
-                    {/* <span className="text-xs text-cyan-400/70 group-hover:text-cyan-400 tracking-widest font-mono">ALL_REPOSITORIES</span> */}
-                  </span>
-                </div>
+                <span className="font-bold text-xl tracking-widest text-white">
+                  EXPLORE
+                </span>
               </motion.div>
             </div>
           </div>
         </div>
       </div>
-      {/* Include the ProjectModal component and handle its visibility */}
+
+      {/* ================= MODAL ================= */}
       <AnimatePresence>
-        //
-        {selectedProject && ( //
-          <ProjectModal //
-            project={selectedProject} //
-            onClose={() => setSelectedProject(null)} // Clear selected project
-          /> //
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
         )}
-        //
       </AnimatePresence>
-      //
     </>
-    //
-  ); //
-} //
+  );
+}
 
 function Placeholder() {
-  //
   return (
-    //
-    <div className="rounded-2xl border border-gray-700 bg-gray-900 flex items-center justify-center text-sm text-gray-500 min-h-0 h-full w-full italic">
-      //
-      Projects //
+    <div className="rounded-2xl border border-gray-700 bg-gray-900 flex items-center justify-center text-sm text-gray-500 h-full w-full italic">
+      Projects
     </div>
-    //
-  ); //
-} //
+  );
+}

@@ -213,7 +213,7 @@
 import Image from "next/image";
 import AnimatedColorText from "./AnimatedColorText";
 import TitleText from "./Title";
-import {  Github, Linkedin, Mail,Download } from "lucide-react";
+import { Github, Linkedin, Mail, Download } from "lucide-react";
 import Tooltip from "./Tooltip";
 import AnimatedCounter from "./AnimatedCounter";
 import { motion } from "framer-motion";
@@ -253,7 +253,7 @@ const HeroSection = () => {
   return (
     <div
       className="
-    min-h-screen
+    min-h-auto
     lg:min-h-screen
     flex
     flex-col
@@ -263,6 +263,7 @@ const HeroSection = () => {
     lg:-mt-18
    mt-12
   "
+
     >
       {/* LEFT SECTION */}
       <div className="flex flex-col gap-8 items-center lg:items-start lg:w-2/5 ">
@@ -324,7 +325,7 @@ const HeroSection = () => {
       </div>
 
       {/* RIGHT SECTION */}
-      <div className="lg:w-3/5 min-h-[515px] border-l border-gray-800 pl-0 lg:pl-6 pt-10 lg:pt-0">
+      <div className="lg:w-3/5 border-t  lg:border-l border-gray-800 pl-0 lg:pl-6 pt-10 lg:pt-0">
         {/* Animated Title */}
         <motion.div
           initial={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 50 }}

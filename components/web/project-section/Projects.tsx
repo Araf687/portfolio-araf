@@ -48,7 +48,7 @@ const ProjectSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mt-20 lg:mt-60 px-4 sm:px-6 lg:px-0" ref={containerRef}>
+    <div className="mt-24 lg:mt-60 px-0 sm:px-6 lg:px-0" ref={containerRef}>
       {/* Title */}
       <div className="flex justify-center lg:justify-end ">
         <TitleText direction="column">FEATURED _PROJECTS_</TitleText>
