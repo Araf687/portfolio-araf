@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { DataTable } from "@/components/admin/DataTable";
-import { contactColumns } from "./columns"; // Contact columns
-import { useFetchMessages } from "@/app/hooks/useContact";
-import { ContactMsg } from "@/app/hooks/useContact";
+import { contactColumns } from "./columns"; // Your columns definition
+import { useFetchMessages, ContactMsg } from "@/app/hooks/useContact";
 import { Modal } from "@/components/admin/modal";
 import { Eye } from "lucide-react";
 
 const ContactPage = () => {
-  const { data, isLoading } = useFetchMessages();
+  const { data, isLoading, isError } = useFetchMessages();
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<ContactMsg | null>(null);
 
@@ -23,7 +22,7 @@ const ContactPage = () => {
     if (col.id === "actions") {
       return {
         ...col,
-        cell: ({ row }: any) => (
+        cell: ({ row }: { row: { original: ContactMsg } }) => (
           <div className="flex gap-2">
             <button
               onClick={() => handleView(row.original)}
@@ -40,15 +39,25 @@ const ContactPage = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       <h1 className="text-2xl font-bold text-white">Contact Messages</h1>
 
-      {isLoading ? (
+      {isLoading && (
         <p className="text-gray-400">Loading messages...</p>
-      ) : (
+      )}
+
+      {isError && (
+        <p className="text-red-500">Failed to load messages. Please try again later.</p>
+      )}
+
+      {!isLoading && !isError && data && data?.length === 0 && (
+        <p className="text-gray-400">No messages found.</p>
+      )}
+
+      {!isLoading && !isError && data && data?.length > 0 && (
         <DataTable<ContactMsg, any>
           columns={columnsWithView}
-          data={data ?? []}
+          data={data}
         />
       )}
 
