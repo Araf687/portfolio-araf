@@ -281,7 +281,7 @@ const HeroSection = () => {
         {/* Text */}
         <div className="text-center lg:text-left">
           <h2 className="text-sm sm:text-base lg:text-2xl tracking-wider text-gray-400 mb-2">
-            HI, I'M
+            HI, {`I'M`}
           </h2>
 
           <AnimatedColorText
@@ -390,8 +390,8 @@ const HeroSection = () => {
               items-center 
               gap-3 
               rounded-full 
-              px-8 
-              py-3.5 
+              px-5 
+              py-2.5 
               font-bold 
               bg-white 
               text-black 
@@ -401,10 +401,12 @@ const HeroSection = () => {
               active:scale-95 
               shadow-lg 
               shadow-white/5
+              sm:px-8 
+              sm:py-3.5
             "
           >
-            <Download size={20} className="group-hover:animate-bounce" />
-            <span className="tracking-wide">Download My CV</span>
+            <Download size={18} className="group-hover:animate-bounce" />
+            <span className="tracking-wide text-xs sm:text-base">Download My CV</span>
           </a>
         </motion.div>
       </div>
@@ -413,5 +415,3 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
-
-

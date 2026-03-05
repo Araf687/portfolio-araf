@@ -4,6 +4,7 @@ import SkillItem from "./SkillItem";
 import TitleText from "../../Title";
 import { useFetchSkills } from "@/app/hooks/useSkills";
 import { motion } from "framer-motion";
+import { Skill } from "@/types/data";
 
 const Skills = () => {
   const { data: skills, isLoading } = useFetchSkills();
@@ -29,7 +30,7 @@ const Skills = () => {
         }}
       >
         {skills && skills.length > 0 ? (
-          skills.map((skill: any) => (
+          skills.map((skill: Skill) => (
             <motion.div
               key={skill.id}
               variants={{

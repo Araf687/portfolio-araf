@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
+} from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface Ripple {
@@ -12,6 +17,7 @@ interface Ripple {
 export default function InkBackground() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   const x = useSpring(mouseX, { stiffness: 80, damping: 30 });
   const y = useSpring(mouseY, { stiffness: 80, damping: 30 });
@@ -52,20 +58,24 @@ export default function InkBackground() {
     <div className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
       {/* Mouse-following ink blob */}
       <motion.div
-        style={{ x, y }}
+        style={
+          isMobile
+            ? { left: -200, top: -200 } // left corner position for mobile
+            : { x, y }
+        }
         className="
-          absolute
-          h-[400px]
-          w-[400px]
-          rounded-full
-          blur-[120px]
-          opacity-60
-          mix-blend-screen
-          bg-gradient-to-tr
-          from-cyan-400
-          via-blue-500
-          to-purple-600
-        "
+    absolute
+    h-[400px]
+    w-[400px]
+    rounded-full
+    blur-[120px]
+    opacity-60
+    mix-blend-screen
+    bg-gradient-to-tr
+    from-cyan-400
+    via-blue-500
+    to-purple-600
+  "
         animate={{ scale: [1, 1.15, 1] }}
         transition={{ duration: 6, repeat: Infinity }}
       />
