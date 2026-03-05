@@ -61,7 +61,7 @@ export default function BentoProjectsGrid({
   return (
     <>
       {/* ================= MOBILE VIEW (UNCHANGED) ================= */}
-      <div className="lg:hidden lg:mt-16 mt-10 lg:p-0 p-2 space-y-6">
+      <div className="lg:hidden lg:mt-16 mt-10 lg:p-0 p-2 space-y-6 overflow-x-hidden">
 
         {/* Row 1 — 1 Item */}
         {items[0] && (

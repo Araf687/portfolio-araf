@@ -36,7 +36,7 @@ export function ProjectCard({
       {/* Wrapper to allow cut circle outside */}
       <div className="relative h-full">
         {/* 🔵 CUT CIRCLE (above card) */}
-        <div className="absolute -bottom-[1px] -right-[1px] z-50 pointer-events-none">
+        <div className="absolute -bottom-[1px] -right-[1px] z-50 pointer-events-none hidden sm:block">
           <div className="relative w-20 h-20">
             <motion.div
               whileHover={{ scale: 1.1 }}

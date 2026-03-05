@@ -33,7 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased z-0`}
       >
         <ThemeProvider>
-          <div className="min-h-screen bg-background text-foreground">
+          <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
             <TopNav />
             <QueryProvider>{children}</QueryProvider>
             <Footer />
