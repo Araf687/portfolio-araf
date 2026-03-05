@@ -43,11 +43,15 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
     setTheme(initial);
     document.documentElement.dataset.theme = initial;
+    document.body.dataset.theme = initial;
+    document.documentElement.style.colorScheme = initial;
   }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    document.body.dataset.theme = theme;
     window.localStorage.setItem("theme", theme);
+    document.documentElement.style.colorScheme = theme;
   }, [theme]);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme]);

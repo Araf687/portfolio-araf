@@ -29,17 +29,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen -mt-24 flex items-center justify-center bg-black">
+    <div className="min-h-screen -mt-24 flex items-center justify-center bg-background">
       <form
         onSubmit={handleLogin}
         className="flex flex-col gap-6 p-10 w-[400px] md:w-[500px] rounded-2xl 
-                   border border-white/20 shadow-lg text-white"
+                   border border-border/60 shadow-lg bg-surface text-foreground"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-200 mb-3">Admin</h2>
+        <h2 className="text-2xl font-bold text-center text-foreground mb-3">
+          Admin
+        </h2>
 
         {/* Email */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-gray-200 mb-1 font-medium">
+          <label htmlFor="email" className="text-foreground mb-1 font-medium">
             Email
           </label>
           <input
@@ -48,14 +50,14 @@ export default function LoginPage() {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-600 bg-gray-800 text-white p-3 rounded-lg placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="border border-border/60 bg-background text-foreground p-3 rounded-lg placeholder-muted focus:outline-none focus:ring-2 focus:ring-border/80"
             required
           />
         </div>
 
         {/* Password */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="text-white mb-1 font-medium">
+          <label htmlFor="password" className="text-foreground mb-1 font-medium">
             Password
           </label>
           <input
@@ -64,7 +66,7 @@ export default function LoginPage() {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border border-gray-600 bg-gray-800 text-white p-3 rounded-lg placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="border border-border/60 bg-background text-foreground p-3 rounded-lg placeholder-muted focus:outline-none focus:ring-2 focus:ring-border/80"
             required
           />
         </div>
