@@ -10,14 +10,16 @@ const Skills = () => {
   const { data: skills, isLoading } = useFetchSkills();
 
   if (isLoading)
-    return <p className="mt-10 text-center text-gray-400">Loading skills...</p>;
+    return <p className="mt-10 text-center text-muted">Loading skills...</p>;
 
   return (
     <div className="mt-24 lg:mt-0 lg:mt-32 px-4 sm:px-6 lg:px-0">
-      <TitleText direction="column">TECHNICAL SKILLS</TitleText>
+      <div className="mb-3">
+        <TitleText direction="column">TECHNICAL SKILLS</TitleText>
+      </div>
 
       <motion.div
-        className="mt-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 lg:mt-10"
+        className=" grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 mt-14 lg:mt-10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -43,7 +45,7 @@ const Skills = () => {
             </motion.div>
           ))
         ) : (
-          <p className="text-gray-400">No skills found.</p>
+          <p className="text-muted">No skills found.</p>
         )}
       </motion.div>
     </div>

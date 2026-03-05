@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { ProjectCard } from "./project-card";
 import ProjectModal from "./project-modal";
+import { useTheme } from "@/components/ThemeProvider";
 
 export type Project = {
   id: string;
@@ -41,6 +42,8 @@ export default function BentoProjectsGrid({
   const items = projects.slice(0, 6);
   const [selectedProject, setSelectedProject] =
     useState<Project | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const variants: Variants = {
     fromLeft: { opacity: 0, x: -60 },
@@ -129,10 +132,14 @@ export default function BentoProjectsGrid({
         {/* Explore Button */}
         <motion.div
           whileHover={{ scale: 1.02 }}
-          className="group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-8 border border-white/10 bg-white/5 backdrop-blur-md"
+          className={`group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-8 backdrop-blur-md ${
+            isDark
+              ? "border border-border/60 bg-surface/70"
+              : "border-2 border-gray-400 bg-surface/80"
+          }`}
           onClick={onAllProjectsClick}
         >
-          <span className="font-bold text-lg tracking-widest text-white">
+          <span className="font-bold text-lg tracking-widest text-foreground">
             EXPLORE ALL
           </span>
         </motion.div>
@@ -235,10 +242,14 @@ export default function BentoProjectsGrid({
 
               <motion.div
                 whileHover={{ scale: 1.02 }}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-4 border border-white/10 bg-white/5 backdrop-blur-md"
+                className={`group relative rounded-2xl overflow-hidden cursor-pointer flex items-center justify-center p-4 backdrop-blur-md ${
+                  isDark
+                    ? "border border-border/60 bg-surface/70"
+                    : "border-2 border-gray-400 bg-surface/80"
+                }`}
                 onClick={onAllProjectsClick}
               >
-                <span className="font-bold text-xl tracking-widest text-white uppercase">
+                <span className="font-bold text-xl tracking-widest text-foreground uppercase">
                   EXPLORE
                 </span>
               </motion.div>
@@ -261,8 +272,17 @@ export default function BentoProjectsGrid({
 }
 
 function Placeholder() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center text-sm text-gray-500 h-full w-full italic">
+    <div
+      className={`rounded-2xl flex items-center justify-center text-sm text-muted h-full w-full italic ${
+        isDark
+          ? "border border-white/10 bg-white/5"
+          : "border-2 border-gray-400 bg-surface/70 backdrop-blur-md"
+      }`}
+    >
       Projects
     </div>
   );

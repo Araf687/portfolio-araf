@@ -4,6 +4,7 @@ import { Briefcase, House, Mail, Server } from "lucide-react"; // Server = Techn
 import Tooltip from "./Tooltip";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
 const TopNav = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -39,8 +40,8 @@ const TopNav = () => {
           transition-all duration-300
           ${
             scrolled
-              ? "bg-white/10 backdrop-blur-md border border-white/20 shadow-lg"
-              : "bg-transparent border border-gray-800"
+              ? "bg-surface/80 backdrop-blur-md border border-border/60 shadow-lg"
+              : "bg-transparent border border-border/60"
           }
         `}
       >
@@ -48,12 +49,13 @@ const TopNav = () => {
           <Tooltip content={option.name} key={option.name}>
             <button
               onClick={() => handleScroll(option.id)}
-              className="flex items-center gap-2 p-3 text-gray-300 hover:text-white rounded"
+              className="flex items-center gap-2 p-3 text-muted hover:text-foreground rounded"
             >
               {option.icon}
             </button>
           </Tooltip>
         ))}
+        <ThemeToggle />
       </div>
     </div>
   );

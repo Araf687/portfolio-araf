@@ -17,17 +17,33 @@ interface Ripple {
 export default function InkBackground() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
   const x = useSpring(mouseX, { stiffness: 80, damping: 30 });
   const y = useSpring(mouseY, { stiffness: 80, damping: 30 });
+
+  const [isMobile, setIsMobile] = useState(false);
 
   // State to hold active ripples
   const [ripples, setRipples] = useState<Ripple[]>([]);
   let idCounter = 0;
 
+  useEffect(() => {
+    const update = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        mouseX.set(0);
+        mouseY.set(0);
+      }
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   // Mouse follow
   useEffect(() => {
+    if (isMobile) return;
     const move = (e: MouseEvent) => {
       mouseX.set(e.clientX - 200);
       mouseY.set(e.clientY - 200);
@@ -35,7 +51,7 @@ export default function InkBackground() {
 
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, []);
+  }, [isMobile]);
 
   // Left click ripple
   useEffect(() => {
@@ -60,7 +76,7 @@ export default function InkBackground() {
       <motion.div
         style={
           isMobile
-            ? { left: -200, top: -200 } // left corner position for mobile
+            ? { left: -250, top: -300 } // left corner position for mobile
             : { x, y }
         }
         className="

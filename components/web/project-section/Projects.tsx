@@ -84,7 +84,7 @@ const ProjectSection = () => {
       {/* Projects Display Logic */}
       {isLoading ? (
         // Loading State
-        <div className="flex flex-col items-center justify-center pt-20 text-gray-500 gap-4">
+        <div className="flex flex-col items-center justify-center pt-20 text-muted gap-4">
           <Loader2 className="animate-spin" size={40} />
           <p>Fetching amazing projects...</p>
         </div>
@@ -98,7 +98,7 @@ const ProjectSection = () => {
         <BentoProjectsGrid projects={projects as any} />
       ) : (
         // Empty State (No Projects Found)
-        <div className="text-center pt-20 text-gray-500">
+        <div className="text-center pt-20 text-muted">
           <p>No {activeTab === "web" ? "Web" : "Mobile"} projects found.</p>
         </div>
       )}

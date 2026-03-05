@@ -28,12 +28,12 @@ export default function TitleText({
         ${className}
       `}
     >
-      <span className="text-white">{firstWord}</span>
+      <span className="text-foreground">{firstWord}</span>
 
       {restWords && (
         <span
           className={`
-            text-gray-600 ml-2
+            text-muted ml-2
             ${isColumn ? "lg:ml-0 lg:mt-0" : "lg:ml-6 lg:mt-0"}
           `}
         >

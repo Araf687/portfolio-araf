@@ -218,6 +218,7 @@ import Tooltip from "./Tooltip";
 import AnimatedCounter from "./AnimatedCounter";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const HeroSection = () => {
   const spectrumColors = [
@@ -239,6 +240,8 @@ const HeroSection = () => {
   ];
 
   const [isMobile, setIsMobile] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   // Detect screen size
   useEffect(() => {
@@ -268,7 +271,7 @@ const HeroSection = () => {
       {/* LEFT SECTION */}
       <div className="flex flex-col gap-8 items-center lg:items-start lg:w-2/5 ">
         {/* Image */}
-        <div className="relative h-[200px] w-[200px] sm:h-[240px] sm:w-[240px] lg:h-[260px] lg:w-[260px] overflow-hidden rounded-full border border-gray-200 shadow-md">
+        <div className="relative h-[200px] w-[200px] sm:h-[240px] sm:w-[240px] lg:h-[260px] lg:w-[260px] overflow-hidden rounded-full border border-border/60 shadow-md">
           <Image
             src="/profile-photo.png"
             alt="Profile Picture"
@@ -280,7 +283,7 @@ const HeroSection = () => {
 
         {/* Text */}
         <div className="text-center lg:text-left">
-          <h2 className="text-sm sm:text-base lg:text-2xl tracking-wider text-gray-400 mb-2">
+          <h2 className="text-sm sm:text-base lg:text-2xl tracking-wider text-muted mb-2">
             HI, {`I'M`}
           </h2>
 
@@ -296,7 +299,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="mt-4 text-xs sm:text-base lg:text-lg tracking-wide text-justify text-gray-400 hidden sm:block"
+            className="mt-4 text-xs sm:text-base lg:text-lg tracking-wide text-justify text-muted hidden sm:block"
           >
             FRONTEND DEVELOPER FOCUSED ON SCALABLE ARCHITECTURE, CLEAN
             STRUCTURE, CLEAR UX AND PERFORMANCE.
@@ -313,7 +316,7 @@ const HeroSection = () => {
               <Tooltip key={contact.name} content={contact.name}>
                 <a
                   href={contact.href}
-                  className="flex items-center gap-3 text-sm sm:text-base text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center gap-3 text-sm sm:text-base text-muted hover:text-foreground transition-colors"
                 >
                   {contact.icon}
                   <span>{contact.name}</span>
@@ -325,7 +328,7 @@ const HeroSection = () => {
       </div>
 
       {/* RIGHT SECTION */}
-      <div className="lg:w-3/5 border-t  lg:border-l border-gray-800 pl-0 lg:pl-6 pt-10 lg:pt-0">
+      <div className="lg:w-3/5 border-t lg:border-t-0 lg:border-l border-border/60 pl-0 lg:pl-6 pt-10 lg:pt-0">
         {/* Animated Title */}
         <motion.div
           initial={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 50 }}
@@ -344,7 +347,7 @@ const HeroSection = () => {
             mt-3
             px-4 sm:px-0
             text-sm sm:text-base lg:text-lg
-            text-gray-400
+            text-muted
             max-w-[410px]
             sm:text-justify text-center
           "
@@ -364,10 +367,10 @@ const HeroSection = () => {
               key={index}
               className="flex flex-col items-center w-[90px] sm:w-[110px] lg:w-[120px]"
             >
-              <p className="text-white text-3xl sm:text-4xl lg:text-6xl font-semibold leading-none">
+              <p className="text-foreground text-3xl sm:text-4xl lg:text-6xl font-semibold leading-none">
                 <AnimatedCounter end={item.end} suffix={item.suffix} />
               </p>
-              <p className="text-gray-400 text-[10px] sm:text-xs lg:text-sm tracking-wide text-center mt-1">
+              <p className="text-muted text-[10px] sm:text-xs lg:text-sm tracking-wide text-center mt-1">
                 {item.resttxt.toUpperCase()}
               </p>
             </div>
@@ -383,7 +386,7 @@ const HeroSection = () => {
         >
           <a
             href="/api/cv/download"
-            className="
+            className={`
               group 
               relative 
               inline-flex 
@@ -393,9 +396,6 @@ const HeroSection = () => {
               px-5 
               py-2.5 
               font-bold 
-              bg-white 
-              text-black 
-              hover:bg-gray-200 
               transition-all 
               duration-300 
               active:scale-95 
@@ -403,7 +403,12 @@ const HeroSection = () => {
               shadow-white/5
               sm:px-8 
               sm:py-3.5
-            "
+              ${
+                isDark
+                  ? "bg-white text-black hover:bg-gray-200"
+                  : "bg-slate-900 text-white hover:bg-slate-800"
+              }
+            `}
           >
             <Download size={18} className="group-hover:animate-bounce" />
             <span className="tracking-wide text-xs sm:text-base">Download My CV</span>
