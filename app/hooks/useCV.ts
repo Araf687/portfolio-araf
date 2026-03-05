@@ -6,12 +6,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
    Fetch CV
 =========================== */
 export function useFetchCV() {
-  return useQuery<CV>({
+  return useQuery<CV | null>({
     queryKey: ["cv"],
-    queryFn: () => fetcher<CV>("/api/cv"),
+    queryFn: () => {
+      if (typeof window === "undefined") return Promise.resolve(null);
+      return fetcher<CV>("/api/cv");
+    },
   });
 }
-
 
 /* ===========================
    Upload / Update CV
