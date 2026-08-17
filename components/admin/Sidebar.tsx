@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="bg-gray-900 text-gray-100 w-64 h-[100vh] p-4 border-r border-gray-700 flex flex-col">
+    <aside className="bg-gray-900 text-gray-100 w-64 shrink-0 sticky top-0 h-screen p-4 border-r border-gray-700 flex flex-col">
       <h1 className="text-2xl font-bold mb-10">Portfolio Admin</h1>
 
       <nav className="flex-1">

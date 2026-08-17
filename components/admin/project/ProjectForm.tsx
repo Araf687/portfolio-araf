@@ -151,8 +151,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
         />
       </div>
 
-      {/* Category + Skills */}
-      <div className="grid grid-cols-[3fr_1fr] gap-4 items-end">
+      {/* Skills + Category + Featured */}
+      <div className="grid grid-cols-1 md:grid-cols-[3fr_1fr_auto] gap-4 items-end">
         {/* Skills */}
         <div>
           <label className="block mb-1 font-medium">Skills</label>
@@ -178,11 +178,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
             <option value="app">Mobile App</option>
           </select>
         </div>
-      </div>
 
-      {/* Featured Checkbox */}
-      <div className="md:col-span-1 flex items-center h-[42px]"> {/* Match height of other inputs */}
-        <label className="flex items-center space-x-3 cursor-pointer group">
+        {/* Featured Checkbox */}
+        <div className="flex items-center h-[42px] whitespace-nowrap">
+          <label className="flex items-center space-x-3 cursor-pointer group">
           <div className="relative">
             <input
               type="checkbox"
@@ -211,7 +210,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
           <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
             Featured
           </span>
-        </label>
+          </label>
+        </div>
       </div>
 
       {/* URLs */}

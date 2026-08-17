@@ -40,21 +40,23 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ scale: 0.9, opacity: 0 }}
           >
             <div
-              className={`bg-gray-900 text-white rounded-lg shadow-lg p-6 relative ${
+              className={`bg-gray-900 text-white rounded-lg shadow-lg relative w-full flex flex-col max-h-[90vh] ${
                 width || "max-w-2xl"
               }`}
             >
-              {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+              {/* Header (stays put while the body scrolls) */}
+              <div className="flex items-center justify-between gap-4 px-6 pt-6 pb-4">
+                <h2 className="text-xl font-semibold">{title}</h2>
 
-              {/* Close button */}
-              <button
-                onClick={onClose}
-                className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              >
-                <X size={20} />
-              </button>
+                <button
+                  onClick={onClose}
+                  className="ml-auto text-gray-400 hover:text-white"
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-              <div>{children}</div>
+              <div className="px-6 pb-6 overflow-y-auto">{children}</div>
             </div>
           </motion.div>
         </>

@@ -88,7 +88,8 @@ const TiptapEditor = ({ form, name, label }: TiptapEditorProps) => {
      immediatelyRender: false, // ✅ VERY IMPORTANT
     editorProps: {
       attributes: {
-        class: "prose prose-invert max-w-none focus:outline-none min-h-[250px] p-4 text-gray-300",
+        class:
+          "prose prose-invert max-w-none focus:outline-none min-h-[130px] max-h-[220px] overflow-y-auto p-4 text-gray-300",
       },
     },
     onUpdate: ({ editor }) => {

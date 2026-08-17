@@ -53,7 +53,7 @@ const ProjectPage = () => {
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         title={"Edit New Project"}
-        width="w-200"
+        width="max-w-5xl"
       >
         <ProjectEditForm
           closeModal={() => setModalOpen(false)}
@@ -63,7 +63,7 @@ const ProjectPage = () => {
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         title={"Add New Project"}
-        width="w-200"
+        width="max-w-5xl"
       >
         <ProjectForm
           closeModal={() => setModalOpen(false)}

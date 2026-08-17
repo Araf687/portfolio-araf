@@ -43,7 +43,7 @@ export function ProjectCard({
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
               className="absolute bg-white rounded-full p-3.5 right-1 bottom-1 z-60 pointer-events-auto shadow-lg hover:shadow-xl"
             >
-              <MoveUpRight />
+              <MoveUpRight className="text-black" />
             </motion.div>
 
             <Image
