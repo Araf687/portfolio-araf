@@ -43,6 +43,8 @@ model Project {
   github_url  String?
   live_url    String?
   is_featured Boolean?
+  /// Display order among featured projects. Only meaningful when is_featured is true.
+  featured_number Int?
   thumbnail   String?
   category    String?
 

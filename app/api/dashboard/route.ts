@@ -21,7 +21,11 @@ export async function GET() {
       }),
       prisma.project.findMany({
         where: { is_featured: true },
-        select: { id: true, title: true, thumbnail: true },
+        select: { id: true, title: true, thumbnail: true, featured_number: true },
+        orderBy: [
+          { featured_number: { sort: "asc", nulls: "last" } },
+          { created_at: "desc" },
+        ],
         take: 3
       }),
       prisma.page_views.count()

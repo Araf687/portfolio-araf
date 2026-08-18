@@ -33,7 +33,12 @@ export const projectColumns = ({ onEdit }: ProjectColumnsProps): ColumnDef<Proje
     header: "Featured",
     cell: ({ row }) =>
       row.original.is_featured ? (
-        <Star size={16} className="text-yellow-400" />
+        <span className="flex items-center gap-1.5 text-yellow-400">
+          <Star size={16} />
+          <span className="text-sm tabular-nums">
+            {row.original.featured_number ?? "—"}
+          </span>
+        </span>
       ) : (
         <span className="text-gray-500">—</span>
       ),

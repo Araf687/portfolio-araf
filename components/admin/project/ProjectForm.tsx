@@ -15,6 +15,7 @@ export type ProjectFormData = {
   github_url?: string;
   live_url?: string;
   is_featured: boolean;
+  featured_number?: number | string | null;
   thumbnail?: File | null;
   images: File[];
   skills: string[];
@@ -44,6 +45,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
   // Watch images and thumbnail
   const images = watch("images");
   const thumbnail = watch("thumbnail");
+  const isFeatured = watch("is_featured");
 
   // Preview URLs
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -214,8 +216,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
         </div>
       </div>
 
-      {/* URLs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* URLs + featured number */}
+      <div
+        className={`grid grid-cols-1 gap-4 items-start ${
+          isFeatured ? "md:grid-cols-[1fr_1fr_9rem]" : "md:grid-cols-2"
+        }`}
+      >
         <div>
           <label className="block mb-1 font-medium">GitHub URL</label>
           <input
@@ -230,6 +236,22 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({
             className="w-full rounded px-3 py-2 bg-gray-800 border border-gray-700 focus:outline-none focus:ring-0"
           />
         </div>
+
+        {/* Only shown once "Featured" is ticked */}
+        {isFeatured && (
+          <div>
+            <label className="block mb-1 font-medium">Featured No.</label>
+            <input
+              type="number"
+              min={1}
+              step={1}
+              placeholder="1"
+              {...register("featured_number", { min: 1, valueAsNumber: true })}
+              className="w-full rounded px-3 py-2 bg-gray-800 border border-gray-700 focus:outline-none focus:ring-0"
+            />
+            <p className="mt-1 text-xs text-gray-400">1 shows first.</p>
+          </div>
+        )}
       </div>
 
       {/* Thumbnail */}

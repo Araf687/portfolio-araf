@@ -17,6 +17,7 @@ function serializeProject(project: any) {
     github_url: project.github_url,
     live_url: project.live_url,
     is_featured: project.is_featured,
+    featured_number: project.featured_number,
     thumbnail: project.thumbnail,
     category: project.category,
     // Serialize images
@@ -51,6 +52,23 @@ function serializeProject(project: any) {
         )
       : [],
   };
+}
+
+/* ===========================
+   Featured order
+   Only kept when the project is actually featured, so unchecking
+   "Featured" never leaves a stale number behind.
+=========================== */
+function parseFeaturedNumber(
+  raw: FormDataEntryValue | null,
+  isFeatured: boolean,
+): number | null {
+  if (!isFeatured || raw === null) return null;
+
+  const value = Number(String(raw).trim());
+  if (!Number.isInteger(value) || value < 1) return null;
+
+  return value;
 }
 
 /* ===========================
@@ -92,6 +110,10 @@ export async function POST(request: Request) {
     const github_url = (formData.get("github_url") as string) || null;
     const live_url = (formData.get("live_url") as string) || null;
     const is_featured = formData.get("is_featured") === "true";
+    const featured_number = parseFeaturedNumber(
+      formData.get("featured_number"),
+      is_featured,
+    );
     const category = formData.get("category") as "web" | "app";
     const skills = formData.getAll("skills") as string[];
 
@@ -120,6 +142,7 @@ export async function POST(request: Request) {
         github_url,
         live_url,
         is_featured,
+        featured_number,
         category,
         thumbnail: thumbnailUrl,
         skills: skills.length
@@ -220,6 +243,7 @@ export async function PUT(request: Request) {
 
     // 4. Update Main Project Data & Skills
     const skills = formData.getAll("skills");
+    const is_featured = formData.get("is_featured") === "true";
     const updated = await prisma.project.update({
       where: { id },
       data: {
@@ -227,7 +251,11 @@ export async function PUT(request: Request) {
         description: formData.get("description") as string,
         github_url: formData.get("github_url") as string,
         live_url: formData.get("live_url") as string,
-        is_featured: formData.get("is_featured") === "true",
+        is_featured,
+        featured_number: parseFeaturedNumber(
+          formData.get("featured_number"),
+          is_featured,
+        ),
         category: formData.get("category") as string,
         ...(thumbnailUrl && { thumbnail: thumbnailUrl }),
         skills: {

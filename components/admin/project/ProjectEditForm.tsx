@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { X, Loader2, Link as LinkIcon, Github } from "lucide-react";
+import { X, Loader2, Link as LinkIcon, Github, Star, UploadCloud, ImagePlus } from "lucide-react";
 import { useToast } from "@/context/ToastProvider";
 import MultiSelect from "@/components/MultiSelect";
 import { useFetchSkills } from "@/app/hooks/useSkills";
@@ -15,6 +15,7 @@ export type ProjectFormData = {
   github_url?: string;
   live_url?: string;
   is_featured: boolean;
+  featured_number?: number | string | null;
   thumbnail?: File | string | null;
   images: File[];
   skills: string[];
@@ -24,6 +25,59 @@ interface ProjectFormProps {
   closeModal: () => void;
   initialData: any; 
 }
+
+/* ---------------- Reusable upload box ---------------- */
+const UploadBox: React.FC<{
+  id: string;
+  title: string;
+  hint: string;
+  multiple?: boolean;
+  onFiles: (files: FileList | null) => void;
+  children?: React.ReactNode;
+}> = ({ id, title, hint, multiple, onFiles, children }) => {
+  const [isOver, setIsOver] = useState(false);
+
+  return (
+    <label
+      htmlFor={id}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsOver(true);
+      }}
+      onDragLeave={() => setIsOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsOver(false);
+        onFiles(e.dataTransfer.files);
+      }}
+      className={`flex min-h-[132px] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-4 text-center transition ${
+        isOver
+          ? "border-indigo-500 bg-indigo-500/10"
+          : "border-gray-700 bg-gray-900/40 hover:border-indigo-500/60 hover:bg-gray-900/70"
+      }`}
+    >
+      <input
+        id={id}
+        type="file"
+        accept="image/*"
+        multiple={multiple}
+        className="sr-only"
+        onChange={(e) => {
+          onFiles(e.target.files);
+          // reset so picking the same file again still fires onChange
+          e.target.value = "";
+        }}
+      />
+
+      {children ?? <UploadCloud size={22} className="text-gray-500" />}
+
+      <div>
+        <p className="text-sm font-medium text-gray-200">{title}</p>
+        <p className="text-xs text-gray-500">{hint}</p>
+      </div>
+    </label>
+  );
+};
 
 export const ProjectEditForm: React.FC<ProjectFormProps> = ({
   initialData,
@@ -44,6 +98,7 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
   // Watchers
   const watchedImages = watch("images");
   const watchedThumbnail = watch("thumbnail");
+  const isFeatured = watch("is_featured");
 
   // Local State for Previews and Deletions
   const [existingImages, setExistingImages] = useState(initialData?.images || []);
@@ -61,9 +116,8 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
   }, [watchedThumbnail]);
 
   /* ---------------- Gallery Handlers ---------------- */
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+  const addImageFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
 
     const newFiles = Array.from(files);
     setValue("images", [...watchedImages, ...newFiles]);
@@ -97,6 +151,12 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
     formData.append("github_url", data.github_url || "");
     formData.append("live_url", data.live_url || "");
     formData.append("is_featured", String(data.is_featured));
+    formData.append(
+      "featured_number",
+      data.is_featured && data.featured_number != null
+        ? String(data.featured_number)
+        : "",
+    );
 
     // Handle Skills
     data.skills.forEach(id => formData.append("skills", id));
@@ -210,8 +270,12 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
         </div>
       </div>
 
-      {/* Row: Links */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Row: Links + featured number */}
+      <div
+        className={`grid grid-cols-1 gap-4 items-start ${
+          isFeatured ? "md:grid-cols-[1fr_1fr_9rem]" : "md:grid-cols-2"
+        }`}
+      >
         <div>
           <label className="flex items-center gap-2 mb-1 text-sm font-medium text-gray-400">
             <Github size={14} /> Github URL
@@ -224,36 +288,60 @@ export const ProjectEditForm: React.FC<ProjectFormProps> = ({
           </label>
           <input {...register("live_url")} className="w-full rounded-lg px-4 py-2.5 bg-gray-900 border border-gray-700 focus:border-indigo-500 outline-none" />
         </div>
+
+        {/* Only shown once "Featured" is ticked */}
+        {isFeatured && (
+          <div>
+            <label className="flex items-center gap-2 mb-1 text-sm font-medium text-gray-400">
+              <Star size={14} /> Featured No.
+            </label>
+            <input
+              type="number"
+              min={1}
+              step={1}
+              placeholder="1"
+              {...register("featured_number", { min: 1, valueAsNumber: true })}
+              className="w-full rounded-lg px-4 py-2.5 bg-gray-900 border border-gray-700 focus:border-indigo-500 outline-none"
+            />
+            <p className="mt-1 text-xs text-gray-500">1 shows first.</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
         {/* Thumbnail Section */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-400">Main Thumbnail</label>
-          <div className="flex items-center gap-4">
-            {thumbnailPreview && (
-              <div className="relative w-24 h-16 shrink-0">
-                <img src={thumbnailPreview} className="w-full h-full object-cover rounded-md border border-gray-700" />
-              </div>
+          <UploadBox
+            id="edit-project-thumbnail"
+            title={thumbnailPreview ? "Replace thumbnail" : "Upload thumbnail"}
+            hint="Click or drop an image here"
+            onFiles={(files) => {
+              const file = files?.[0];
+              if (file) setValue("thumbnail", file);
+            }}
+          >
+            {thumbnailPreview ? (
+              <img
+                src={thumbnailPreview}
+                alt="Thumbnail preview"
+                className="h-16 w-24 rounded-md border border-gray-700 object-cover"
+              />
+            ) : (
+              <ImagePlus size={22} className="text-gray-500" />
             )}
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => setValue("thumbnail", e.target.files?.[0] || null)} 
-              className="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600 transition" 
-            />
-          </div>
+          </UploadBox>
         </div>
 
         {/* Gallery Section */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-400">Gallery Images</label>
-          <input 
-            type="file" 
-            multiple 
-            accept="image/*" 
-            onChange={handleImageChange} 
-            className="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600 transition" 
+          <UploadBox
+            id="edit-project-gallery"
+            title="Add gallery images"
+            hint="Click or drop — you can pick several at once"
+            multiple
+            onFiles={addImageFiles}
           />
         </div>
       </div>
