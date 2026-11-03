@@ -53,7 +53,8 @@ const HeroSection = () => {
         {...fadeUp(0.2)}
         className="relative mb-4 font-mono text-xs uppercase tracking-wider text-muted"
       >
-        Software Engineer
+        Software Engineer <span className="text-accent">/</span> Full Stack
+        Developer
       </motion.p>
 
       <h1
@@ -68,7 +69,7 @@ const HeroSection = () => {
         {...fadeUp(0.9)}
         className="relative mt-5 max-w-md text-lg leading-snug text-muted lg:max-w-none"
       >
-        Frontend developer focused on scalable architecture, clean structure,
+        Full stack developer focused on scalable architecture, clean structure,
         clear UX and performance.
       </motion.p>
 

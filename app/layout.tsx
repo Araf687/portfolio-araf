@@ -30,9 +30,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Mohammad Yeasin — Software Engineer",
+  title: "Mohammad Yeasin — Full Stack Developer",
   description:
-    "Frontend developer focused on scalable architecture, clean structure, clear UX and performance.",
+    "Full stack developer focused on scalable architecture, clean structure, clear UX and performance.",
 };
 
 // Runs before paint so a stored or system theme never flashes the wrong colors
