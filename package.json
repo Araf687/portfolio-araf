@@ -2,15 +2,16 @@
   "name": "araf-portfolio",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "next dev",
-  "build": "prisma generate && next build",
-  "start": "next start",
-  "postinstall": "prisma generate"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
+  },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@prisma/client-runtime-utils": "7.2.0",
     "@supabase/supabase-js": "^2.90.1",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-table": "^8.21.3",
