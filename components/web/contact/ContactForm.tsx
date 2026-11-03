@@ -2,29 +2,33 @@
 
 import { easeOut, motion, Variants } from "framer-motion";
 import { useState } from "react";
-import { Loader2, Send } from "lucide-react";
-import { useTheme } from "@/components/ThemeProvider";
+import { Loader2, MoveUpRight } from "lucide-react";
+import Magnetic from "../Magnetic";
 
 const container: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.12,
     },
   },
 };
 
 const item: Variants = {
-  hidden: { opacity: 0, x: -60 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
     transition: {
       duration: 0.5,
       ease: easeOut,
     },
   },
 };
+
+const labelClass = "block font-mono text-xs uppercase tracking-wider text-muted";
+const fieldClass =
+  "mt-1 w-full border-b border-border bg-transparent py-3 text-lg text-foreground placeholder-muted/60 outline-none transition-colors focus:border-accent";
 
 const ContactForm = () => {
   // 1. State for Form Data
@@ -33,8 +37,6 @@ const ContactForm = () => {
     email: "",
     message: "",
   });
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
 
   // 2. State for Status Handling
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -68,10 +70,10 @@ const ContactForm = () => {
       // Success Logic
       setStatus("success");
       setFormData({ name: "", email: "", message: "" }); // Reset form
-      
+
       // Reset status after 5 seconds
       setTimeout(() => setStatus("idle"), 5000);
-      
+
     } catch (err: unknown) {
       console.error("Submission error:", err);
       setStatus("error");
@@ -82,93 +84,96 @@ const ContactForm = () => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="space-y-4 mt-14"
+      className="mt-12 space-y-7"
       variants={container}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.2 }}
     >
-      {/* Name */}
-      <motion.div variants={item}>
-        <label className="block text-sm mb-1 font-medium text-muted">
-          Name
-        </label>
-        <input
-          required
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          type="text"
-          placeholder="Your name"
-          className="mt-1 w-full rounded-md border border-border/60 bg-surface px-4 py-2 text-foreground placeholder-muted outline-none focus:border-indigo-500 transition-colors"
-        />
-      </motion.div>
+      <div className="grid gap-7 sm:grid-cols-2">
+        {/* Name */}
+        <motion.div variants={item}>
+          <label htmlFor="contact-name" className={labelClass}>
+            Name
+          </label>
+          <input
+            required
+            id="contact-name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            type="text"
+            autoComplete="name"
+            placeholder="Your name"
+            className={fieldClass}
+          />
+        </motion.div>
 
-      {/* Email */}
-      <motion.div variants={item}>
-        <label className="block mb-1 text-sm font-medium text-muted">
-          Email
-        </label>
-        <input
-          required
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          type="email"
-          placeholder="you@example.com"
-          className="mt-1 w-full rounded-md border border-border/60 bg-surface px-4 py-2 text-foreground placeholder-muted outline-none focus:border-indigo-500 transition-colors"
-        />
-      </motion.div>
+        {/* Email */}
+        <motion.div variants={item}>
+          <label htmlFor="contact-email" className={labelClass}>
+            Email
+          </label>
+          <input
+            required
+            id="contact-email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            className={fieldClass}
+          />
+        </motion.div>
+      </div>
 
       {/* Message */}
       <motion.div variants={item}>
-        <label className="block text-sm font-medium text-muted">
+        <label htmlFor="contact-message" className={labelClass}>
           Message
         </label>
         <textarea
+          id="contact-message"
           name="message"
           value={formData.message}
           onChange={handleChange}
-          rows={5}
-          placeholder="Write your message..."
-          className="mt-1 w-full rounded-md border border-border/60 bg-surface px-4 py-2 text-foreground placeholder-muted outline-none focus:border-indigo-500 transition-colors resize-none"
+          rows={4}
+          placeholder="Tell me about your project..."
+          className={`${fieldClass} resize-none`}
         />
       </motion.div>
 
       {/* Feedback Messages */}
-      {status === "error" && (
-        <p className="text-red-500 text-sm font-medium">{errorMessage}</p>
-      )}
-      {status === "success" && (
-        <p className="text-green-500 text-sm font-medium">Message sent successfully! {`I'll`} get back to you soon.</p>
-      )}
+      <div aria-live="polite">
+        {status === "error" && (
+          <p className="text-sm font-medium text-red-500">{errorMessage}</p>
+        )}
+        {status === "success" && (
+          <p className="text-sm font-medium text-green-600">Message sent successfully! {`I'll`} get back to you soon.</p>
+        )}
+      </div>
 
       {/* Button */}
-      <motion.button
-        variants={item}
-        disabled={status === "loading"}
-        type="submit"
-        className={`
-          flex items-center justify-center gap-2 w-full mb-1 rounded-md px-6 py-3 font-bold transition-all
-          ${
-            status === "loading"
-              ? "bg-gray-600 cursor-not-allowed"
-              : isDark
-                ? "bg-white text-black hover:bg-gray-200 active:scale-[0.98]"
-                : "bg-slate-900 text-white hover:bg-slate-800 active:scale-[0.98]"
-          }
-        `}
-      >
-        {status === "loading" ? (
-          <>
-            <Loader2 className="animate-spin" size={18} /> Sending...
-          </>
-        ) : (
-          <>
-            <Send size={18} /> Send Message
-          </>
-        )}
-      </motion.button>
+      <motion.div variants={item}>
+        <Magnetic className="inline-block">
+          <button
+            disabled={status === "loading"}
+            type="submit"
+            className="flex items-center justify-center gap-2 rounded-full bg-foreground px-8 py-4 font-semibold text-background transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {status === "loading" ? (
+              <>
+                <Loader2 className="animate-spin" size={18} /> Sending...
+              </>
+            ) : (
+              <>
+                Send message <MoveUpRight size={18} />
+              </>
+            )}
+          </button>
+        </Magnetic>
+      </motion.div>
     </motion.form>
   );
 };

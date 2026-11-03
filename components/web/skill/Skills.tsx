@@ -1,7 +1,7 @@
 "use client";
 
 import SkillItem from "./SkillItem";
-import TitleText from "../../Title";
+import SectionHeading from "../SectionHeading";
 import { useFetchSkills } from "@/app/hooks/useSkills";
 import { motion } from "framer-motion";
 import { Skill } from "@/types/data";
@@ -9,31 +9,34 @@ import { Skill } from "@/types/data";
 const Skills = () => {
   const { data: skills, isLoading } = useFetchSkills();
 
-  if (isLoading)
-    return <p className="mt-10 text-center text-muted">Loading skills...</p>;
-
   return (
-    <div className="mt-24 lg:mt-0 lg:mt-32 px-4 sm:px-6 lg:px-0">
-      <div className="mb-3">
-        <TitleText direction="column">TECHNICAL SKILLS</TitleText>
-      </div>
+    <section className="px-6 pb-28 lg:px-12 xl:px-20 lg:pb-48">
+      <SectionHeading index="02" aside="Toolkit">
+        Skills
+      </SectionHeading>
 
-      <motion.div
-        className=" grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 mt-14 lg:mt-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: 0.1,
+      {isLoading ? (
+        <div className="space-y-px" aria-label="Loading skills">
+          {[0, 1, 2, 3].map((row) => (
+            <div key={row} className="h-20 animate-pulse bg-surface" />
+          ))}
+        </div>
+      ) : skills && skills.length > 0 ? (
+        <motion.ul
+          className="border-t border-border"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.07,
+              },
             },
-          },
-        }}
-      >
-        {skills && skills.length > 0 ? (
-          skills.map((skill: Skill) => (
-            <motion.div
+          }}
+        >
+          {skills.map((skill: Skill, index: number) => (
+            <motion.li
               key={skill.id}
               variants={{
                 hidden: { opacity: 0, y: 30 },
@@ -41,14 +44,14 @@ const Skills = () => {
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <SkillItem skill={skill} />
-            </motion.div>
-          ))
-        ) : (
-          <p className="text-muted">No skills found.</p>
-        )}
-      </motion.div>
-    </div>
+              <SkillItem skill={skill} index={index} />
+            </motion.li>
+          ))}
+        </motion.ul>
+      ) : (
+        <p className="text-muted">No skills found.</p>
+      )}
+    </section>
   );
 };
 

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import {
   createContext,
   useContext,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -27,7 +28,7 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("theme");
@@ -41,16 +42,17 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
           ? "dark"
           : "light";
 
-    setTheme(initial);
+    setThemeState(initial);
     document.documentElement.dataset.theme = initial;
   }, []);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem("theme", theme);
-  }, [theme]);
+  const setTheme = useCallback((next: Theme) => {
+    setThemeState(next);
+    document.documentElement.dataset.theme = next;
+    window.localStorage.setItem("theme", next);
+  }, []);
 
-  const value = useMemo(() => ({ theme, setTheme }), [theme]);
+  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

@@ -11,7 +11,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="flex items-center gap-2 p-3 text-muted hover:text-foreground rounded transition-colors"
+      className="flex items-center gap-2 p-2 text-muted hover:text-foreground rounded-full transition-colors"
       aria-label="Toggle theme"
       title="Toggle theme"
     >
