@@ -28,6 +28,8 @@ export interface Project {
   github_url?: string;
   live_url?: string;
   is_featured?: boolean;
+  featured_number?: number | null;
+  category?: string;
   thumbnail?: string;
   images?: ProjectImage[]; // Correct type
   skills?: ProjectSkill[];  // Correct type

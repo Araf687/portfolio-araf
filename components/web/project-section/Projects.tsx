@@ -1,108 +1,67 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Monitor, Smartphone, Loader2 } from "lucide-react"; // Import Loader icon
-import TitleText from "../../Title";
-import { useFetchProjects } from "@/app/hooks/useProjects";
-import { ProjectItem } from "../../ProjectItem";
-import { WaterDrop } from "../../WaterDrop";
-import { motion, useInView } from "framer-motion";
-import { Project } from "@/types/data";
-// REMOVE: import { dummyProjects } from "@/app/page"; 
-import BentoProjectsGrid from "./bentoui";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, useScroll } from "framer-motion";
+import { useFetchProjects, Project } from "@/app/hooks/useProjects";
+import SectionHeading from "../SectionHeading";
+import { ProjectCard } from "./project-card";
+import ProjectModal from "./project-modal";
+
+// Featured first (by featured_number when set), then the rest in API order
+const byFeatured = (a: Project, b: Project) =>
+  Number(!!b.is_featured) - Number(!!a.is_featured) ||
+  (a.featured_number ?? Infinity) - (b.featured_number ?? Infinity);
 
 const ProjectSection = () => {
-  const [activeTab, setActiveTab] = useState<"web" | "mobile">("web");
-  const [iconSize, setIconSize] = useState(22);
-  const [isLg, setIsLg] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const { data, isLoading, error } = useFetchProjects();
+  const projects = useMemo(() => [...(data ?? [])].sort(byFeatured), [data]);
 
-  // Fetch real project data using your hook
-  const { data: projects, isLoading, error } = useFetchProjects();
-  console.log(projects)
-
-  const tabs = [
-    { key: "web", icon: <Monitor size={iconSize} /> },
-    { key: "mobile", icon: <Smartphone size={iconSize} /> },
-  ];
-
-  // Responsive icon size & screen detection
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) setIconSize(18);
-      else if (window.innerWidth < 1024) setIconSize(20);
-      else setIconSize(22);
-
-      setIsLg(window.innerWidth >= 1024);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Filter projects based on active tab
-  // const filteredProjects = projects?.filter((p: Project) =>
-  //   activeTab === "web" ? p.category === "web" : p.category === "app"
-  // );
-// const filteredProjects = projects
-  // Ref & InView for scroll trigger (if needed for Title)
-  const containerRef = useRef<HTMLDivElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: stackRef,
+    offset: ["start start", "end end"],
+  });
 
   return (
-    <div className="mt-24 lg:mt-60 px-0 sm:px-6 lg:px-0" ref={containerRef}>
-      {/* Title */}
-      <div className="flex justify-center lg:justify-end ">
-        <TitleText direction="column">FEATURED _PROJECTS_</TitleText>
+    <section className="px-6 pb-28 lg:px-12 xl:px-20 lg:pb-48">
+      <SectionHeading index="03" aside="Selected projects">
+        Work
+      </SectionHeading>
+
+      {/* Always mounted: useScroll needs this ref on first render */}
+      <div ref={stackRef}>
+        {isLoading ? (
+          <div className="h-[76svh] animate-pulse rounded-3xl bg-surface" aria-label="Loading projects" />
+        ) : error ? (
+          <p className="py-20 text-center text-accent">
+            Error loading projects. Please try again later.
+          </p>
+        ) : projects.length > 0 ? (
+          projects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              total={projects.length}
+              progress={scrollYProgress}
+              onClick={() => setSelectedProject(project)}
+            />
+          ))
+        ) : (
+          <p className="py-20 text-center text-muted">No projects found.</p>
+        )}
       </div>
 
-      {/* Tabs - Uncommented to allow filtering */}
-      {/* <div className="flex justify-center gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12 relative flex-wrap">
-        {tabs.map(({ key, icon }) => {
-          const isActive = activeTab === key;
-
-          return (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key as "web" | "mobile")}
-              className="relative w-14 sm:w-16 h-14 sm:h-16 flex items-center justify-center"
-            >
-              {isActive && (
-                <WaterDrop layoutId="water-drop" isActive={isActive}>
-                  {icon}
-                </WaterDrop>
-              )}
-
-              {!isActive && (
-                <span className="relative z-10 text-gray-400 hover:text-white transition-colors">
-                  {icon}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div> */}
-
-      {/* Projects Display Logic */}
-      {isLoading ? (
-        // Loading State
-        <div className="flex flex-col items-center justify-center pt-20 text-muted gap-4">
-          <Loader2 className="animate-spin" size={40} />
-          <p>Fetching amazing projects...</p>
-        </div>
-      ) : error ? (
-        // Error State
-        <div className="text-center pt-20 text-red-500">
-          <p>Error loading projects. Please try again later.</p>
-        </div>
-      ) : projects && projects.length > 0 ? (
-        // Success State with Projects
-        <BentoProjectsGrid projects={projects as any} />
-      ) : (
-        // Empty State (No Projects Found)
-        <div className="text-center pt-20 text-muted">
-          <p>No {activeTab === "web" ? "Web" : "Mobile"} projects found.</p>
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
+        )}
+      </AnimatePresence>
+    </section>
   );
 };
 

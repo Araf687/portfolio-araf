@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Github, ExternalLink } from "lucide-react";
-import { Project } from "./bentoui";
+import { Project } from "@/app/hooks/useProjects";
 import Image from "next/image";
 import type { Variants } from "framer-motion";
 
@@ -19,13 +19,26 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   };
 
   const modalVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95, y: -30 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", damping: 20 } },
+    hidden: { opacity: 0, y: 60 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", damping: 26, stiffness: 220 } },
   };
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [onClose]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4"
       variants={backdropVariants}
       initial="hidden"
       animate="visible"
@@ -33,34 +46,35 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
       onClick={onClose}
     >
       <motion.div
-        className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/20 bg-white/10 p-5 md:p-8 shadow-2xl backdrop-blur-xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        className="relative max-h-[92svh] w-full max-w-6xl overflow-y-auto rounded-t-3xl border border-border bg-background p-5 shadow-2xl sm:rounded-3xl md:p-10"
         variants={modalVariants}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 p-2 rounded-full border border-white/20 text-white/70 hover:text-white hover:bg-white/10 transition"
+          autoFocus
+          aria-label="Close"
+          className="sticky top-0 z-10 float-right rounded-full border border-border bg-background p-2 text-muted transition hover:text-foreground"
           onClick={onClose}
         >
           <X size={20} />
         </button>
 
         {/* ===== TITLE + SKILLS ===== */}
-        <div className="mb-6">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">{project.title}</h2>
+        <div className="mb-8">
+          <h2 className="mb-4 font-display text-5xl font-normal uppercase leading-[1.05] md:text-7xl">
+            {project.title}
+          </h2>
 
-          <div className="flex flex-wrap gap-2 md:gap-3">
-            {project.skills.map((skillItem) => (
+          <div className="flex flex-wrap gap-2">
+            {project.skills?.map((skillItem) => (
               <span
                 key={skillItem.skill.id}
-                className="flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 rounded-full border border-white/10 bg-white/5 text-xs md:text-sm text-white/90"
+                className="rounded-full border border-border px-3 py-1 font-mono text-xs uppercase tracking-wider text-muted"
               >
-                <Image
-                  src={skillItem.skill.image_url}
-                  alt={skillItem.skill.name}
-                  width={16}
-                  height={16}
-                />
                 {skillItem.skill.name}
               </span>
             ))}
@@ -68,28 +82,30 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
 
         {/* ===== DESCRIPTION + IMAGES ===== */}
-        <div className="flex flex-col md:flex-row md:justify-between gap-6">
-          
-          {/* Image */}
-          <div className="order-1 md:order-2 w-full md:w-[48%]">
-            <Image
-              src={project.thumbnail}
-              alt={project.title}
-              width={800}
-              height={500}
-              className="rounded-2xl border border-white/10 mb-4 w-full object-cover"
-            />
+        <div className="flex flex-col gap-8 md:flex-row md:justify-between">
 
-            {project.images.length > 0 && (
+          {/* Image */}
+          <div className="order-1 w-full md:order-2 md:w-[56%]">
+            {project.thumbnail && (
+              <Image
+                src={project.thumbnail}
+                alt={project.title}
+                width={800}
+                height={500}
+                className="mb-4 w-full rounded-2xl border border-border object-cover"
+              />
+            )}
+
+            {project.images && project.images.length > 0 && (
               <div className="grid grid-cols-2 gap-4">
                 {project.images.map((image) => (
                   <Image
                     key={image.id}
                     src={image.url}
-                    alt="Project screenshot"
+                    alt={`${project.title} screenshot`}
                     width={400}
                     height={300}
-                    className="rounded-xl border border-white/10 w-full object-cover"
+                    className="w-full rounded-xl border border-border object-cover"
                   />
                 ))}
               </div>
@@ -97,30 +113,30 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           </div>
 
           {/* Description + Links */}
-          <div className="order-2 md:order-1 w-full md:w-[48%] flex flex-col justify-between">
-            <p className="text-base md:text-lg text-white/90 leading-relaxed text-justify mb-4">
-              {project.description}
+          <div className="order-2 w-full md:order-1 md:w-[40%]">
+            <p className="mb-6 whitespace-pre-line text-base leading-relaxed text-muted md:text-lg">
+              {project.description?.replace(/\*\*/g, "")}
             </p>
 
-            <div className="flex flex-wrap gap-6 mt-2">
-              {project.github_url && (
-                <a
-                  href={project.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:underline text-white font-semibold transition"
-                >
-                  <Github size={18} /> GitHub
-                </a>
-              )}
+            <div className="flex flex-wrap gap-3">
               {project.live_url && (
                 <a
                   href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:underline text-white font-semibold transition"
+                  className="flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition active:scale-95"
                 >
-                  <ExternalLink size={18} /> Live Demo
+                  <ExternalLink size={16} /> Live Demo
+                </a>
+              )}
+              {project.github_url && (
+                <a
+                  href={project.github_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold transition hover:bg-surface active:scale-95"
+                >
+                  <Github size={16} /> GitHub
                 </a>
               )}
             </div>

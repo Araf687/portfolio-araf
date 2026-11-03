@@ -1,63 +1,92 @@
 "use client";
 
-import { Briefcase, House, Mail, Server } from "lucide-react"; // Server = Technical Skills icon
-import Tooltip from "./Tooltip";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
+const navOptions = [
+  { name: "Home", id: "hero" },
+  { name: "Skills", id: "skills" },
+  { name: "Work", id: "projects" },
+  { name: "Contact", id: "contact" },
+];
+
 const TopNav = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState("hero");
   const pathname = usePathname();
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+  const hidden = pathname === "/login" || pathname.startsWith("/admin");
+
+  // Highlight whichever section crosses the middle of the viewport
+  useEffect(() => {
+    if (hidden) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+
+    navOptions.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [hidden, pathname]);
 
   // hide TopNav on login page or admin routes
-  if (pathname === "/login" || pathname.startsWith("/admin")) return null;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  if (hidden) return null;
 
   // Scroll function
   const handleScroll = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) el.scrollIntoView();
   };
 
-  const navOptions = [
-    { name: "Home", id: "hero", icon: <House size={20} /> },
-    { name: "Technical Skills", id: "skills", icon: <Server size={20} /> },
-    { name: "Projects", id: "projects", icon: <Briefcase size={20} /> },
-    { name: "Contact", id: "contact", icon: <Mail size={20} /> },
-  ];
-
   return (
-    <div className="fixed top-8 left-0 right-0 z-50 flex justify-center">
-      <div
-        className={`
-          flex items-center justify-center gap-6 px-4 rounded-full
-          transition-all duration-300
-          ${
-            scrolled
-              ? "bg-surface/80 backdrop-blur-md border border-border/60 shadow-lg"
-              : "bg-transparent border border-border/60"
-          }
-        `}
+    <>
+      <motion.div
+        aria-hidden
+        className="fixed top-0 left-0 right-0 z-50 h-[3px] origin-left bg-accent"
+        style={{ scaleX: progress }}
+      />
+
+      <nav
+        aria-label="Primary"
+        className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4"
       >
-        {navOptions.map((option) => (
-          <Tooltip content={option.name} key={option.name}>
+        <div className="flex items-center gap-0.5 rounded-full border border-border bg-background/75 p-1 shadow-lg shadow-black/10 backdrop-blur-md">
+          {navOptions.map((option) => (
             <button
+              key={option.id}
               onClick={() => handleScroll(option.id)}
-              className="flex items-center gap-2 p-3 text-muted hover:text-foreground rounded"
+              aria-current={active === option.id ? "true" : undefined}
+              className={`relative rounded-full px-3 py-2 font-mono text-xs uppercase tracking-wider transition-colors sm:px-4 ${
+                active === option.id
+                  ? "text-background"
+                  : "text-muted hover:text-foreground"
+              }`}
             >
-              {option.icon}
+              {active === option.id && (
+                <motion.span
+                  layoutId="nav-active"
+                  className="absolute inset-0 rounded-full bg-foreground"
+                  transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                />
+              )}
+              <span className="relative">{option.name}</span>
             </button>
-          </Tooltip>
-        ))}
-        <ThemeToggle />
-      </div>
-    </div>
+          ))}
+          <ThemeToggle />
+        </div>
+      </nav>
+    </>
   );
 };
 

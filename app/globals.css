@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --surface: #f3f4f6;
-  --muted: #64748b;
-  --border: #e5e7eb;
+  --background: #f3f0e8;
+  --foreground: #141210;
+  --surface: #e9e5da;
+  --muted: #635e55;
+  --border: #d0cabc;
+  --accent: #d83c08;
+  --on-accent: #ffffff;
 }
 
 @theme inline {
@@ -14,16 +16,22 @@
   --color-surface: var(--surface);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-anton);
+  --font-serif: var(--font-instrument-serif);
 }
 
 :root[data-theme="dark"] {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --surface: #111827;
-  --muted: #9ca3af;
-  --border: #2a2f3a;
+  --background: #0b0a09;
+  --foreground: #f1ede4;
+  --surface: #171513;
+  --muted: #a09a8f;
+  --border: #2c2925;
+  --accent: #ff5a1f;
+  --on-accent: #0b0a09;
 }
 
 :root[data-theme="light"] {
@@ -34,8 +42,42 @@
   color-scheme: dark;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* "MOHAMMAD" in Anton measures 4.69em wide, so stacked lines fill the gutters on phones */
+.hero-name {
+  font-size: calc((100vw - 3rem) / 4.72);
+  line-height: 1.04;
+}
+
+@media (min-width: 64rem) {
+  .hero-name {
+    /* Full name on one line measures about 7.8em */
+    font-size: min(calc((100vw - 10rem) / 8), 17svh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
